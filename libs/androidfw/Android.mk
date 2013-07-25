@@ -44,6 +44,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE:= libandroidfw
 LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -DSTATIC_ANDROIDFW_FOR_TOOLS
+LOCAL_CPPFLAGS += -fno-strict-aliasing
 LOCAL_SRC_FILES:= $(hostSources)
 LOCAL_C_INCLUDES := external/zlib
 
@@ -57,17 +58,18 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE:= libandroidfw
 LOCAL_MODULE_TAGS := optional
+LOCAL_CPPFLAGS += -fno-strict-aliasing
 LOCAL_SRC_FILES:= $(deviceSources)
 LOCAL_C_INCLUDES := \
     external/zlib \
     system/core/include
 LOCAL_STATIC_LIBRARIES := libziparchive
 LOCAL_SHARED_LIBRARIES := \
-	libbinder \
-	liblog \
-	libcutils \
-	libutils \
-	libz
+    libbinder \
+    liblog \
+    libcutils \
+    libutils \
+    libz
 
 include $(BUILD_SHARED_LIBRARY)
 
