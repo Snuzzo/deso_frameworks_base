@@ -15,12 +15,14 @@
 ** limitations under the License.
 */
 -->
-<resources>
 
-    <!-- tint of the Visualizer tile -->
-    <color name="visualizer_fill_color">#96FFFFFF</color>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Network speed indicator -->
-    <color name="status_bar_traffic_color">#FFFFFFFF</color>
+    <style name="TextAppearance.StatusBar.Traffic" parent="@*android:style/TextAppearance.StatusBar.Icon">
+        <!-- Note: must be dp to fit in status bar -->
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/status_bar_traffic_color</item>
+    </style>
 
 </resources>
