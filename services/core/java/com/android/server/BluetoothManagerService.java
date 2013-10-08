@@ -32,6 +32,7 @@ import android.bluetooth.IBluetoothManager;
 import android.bluetooth.IBluetoothManagerCallback;
 import android.bluetooth.IQBluetoothManagerCallback;
 import android.bluetooth.IBluetoothProfileServiceConnection;
+import android.bluetooth.IQBluetoothManagerCallback;
 import android.bluetooth.IBluetoothStateChangeCallback;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -43,6 +44,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.app.AppOpsManager;
 import android.content.pm.UserInfo;
+import android.app.AppOpsManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -746,6 +748,11 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
             msg.obj = this;
             mHandler.sendMessageDelayed(msg, TIMEOUT_BIND_MS);
         }
+    }
+
+    public IQBluetooth getQBluetooth() {
+        // sync protection
+        return mQBluetooth;
     }
 
     private void sendBluetoothStateCallback(boolean isUp) {

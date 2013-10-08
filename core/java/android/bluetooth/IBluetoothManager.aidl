@@ -22,6 +22,7 @@ import android.bluetooth.IQBluetooth;
 import android.bluetooth.IBluetoothManagerCallback;
 import android.bluetooth.IQBluetoothManagerCallback;
 import android.bluetooth.IBluetoothProfileServiceConnection;
+import android.bluetooth.IQBluetoothManagerCallback;
 import android.bluetooth.IBluetoothStateChangeCallback;
 
 /**
