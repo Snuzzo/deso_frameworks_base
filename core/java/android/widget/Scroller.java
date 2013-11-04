@@ -24,7 +24,6 @@ import android.view.ViewConfiguration;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
-
 /**
  * <p>This class encapsulates scrolling. You can use scrollers ({@link Scroller}
  * or {@link OverScroller}) to collect the data you need to produce a scrolling
@@ -109,19 +108,7 @@ public class Scroller  {
     private float mDeceleration;
     private final float mPpi;
 
-    /*
-    * Perf boost related variables
-    * Enabled/Disabled using config_enableCpuBoostForScroller
-    * true value turns it on, by default will be turned off
-    */
-    private Performance mPerf = null;
-    boolean bIsPerfBoostEnabled = false;
-    private int lBoostTimeOut = 0;
-    private int lBoostCpuBoost = 0;
-    private int lBoostSchedBoost = 0;
-    private int lBoostPcDisblBoost = 0;
-    private int lBoostKsmBoost = 0;
-
+    private final PowerManager mPm;
 
     // A context-specific coefficient adjusted to physical values.
     private float mPhysicalCoeff;
@@ -182,7 +169,6 @@ public class Scroller  {
      * not to support progressive "flywheel" behavior in flinging.
      */
     public Scroller(Context context, Interpolator interpolator, boolean flywheel) {
-        boolean bIsPerfBoostEnabled = false;
         mFinished = true;
         if (interpolator == null) {
             mInterpolator = new ViscousFluidInterpolator();
@@ -194,26 +180,8 @@ public class Scroller  {
         mFlywheel = flywheel;
 
         mPhysicalCoeff = computeDeceleration(0.84f); // look and feel tuning
-        bIsPerfBoostEnabled = context.getResources().getBoolean(
-             com.android.internal.R.bool.config_enableCpuBoostForScroller);
-        if (bIsPerfBoostEnabled) {
-        lBoostSchedBoost = context.getResources().getInteger(
-               com.android.internal.R.integer.scrollboost_schedboost_param);
-        lBoostTimeOut = context.getResources().getInteger(
-               com.android.internal.R.integer.scrollboost_timeout_param);
-        lBoostCpuBoost = context.getResources().getInteger(
-               com.android.internal.R.integer.scrollboost_cpuboost_param);
-        lBoostPcDisblBoost = context.getResources().getInteger(
-               com.android.internal.R.integer.scrollboost_pcdisbl_param);
-        lBoostKsmBoost = context.getResources().getInteger(
-               com.android.internal.R.integer.scrollboost_ksmboost_param);
-        }
 
-
-        if (mPerf == null && bIsPerfBoostEnabled) {
-            mPerf = new Performance();
-        }
-
+        mPm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
     }
 
     /**
@@ -432,13 +400,7 @@ public class Scroller  {
         mDeltaY = dy;
         mDurationReciprocal = 1.0f / (float) mDuration;
 
-        if ((mPerf != null) && (duration != 0)) {
-            if (0 == lBoostTimeOut) {
-                lBoostTimeOut = mDuration;
-            }
-            mPerf.perfLockAcquire(lBoostTimeOut, lBoostPcDisblBoost, lBoostSchedBoost,
-                                          lBoostCpuBoost, lBoostKsmBoost);
-        }
+        mPm.cpuBoost(duration * 1000);
     }
 
     /**
