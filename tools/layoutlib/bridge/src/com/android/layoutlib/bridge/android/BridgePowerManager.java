@@ -145,8 +145,14 @@ public class BridgePowerManager implements IPowerManager {
     public void updateBlockedUids(int uid, boolean isBlocked) {
         // pass for now.
     }
+
     @Override
     public void boostScreenBrightness(long time) throws RemoteException {
         // pass for now.
+    }
+
+    @Override
+    public void cpuBoost(int duration) throws RemoteException {
+        // pass for now
     }
 }
