@@ -150,4 +150,8 @@ public class BridgePowerManager implements IPowerManager {
     public void updateBlockedUids(int uid, boolean isBlocked) {
         // pass for now.
     }
+
+    public void cpuBoost(int duration) throws RemoteException {
+        // pass for now
+    }
 }
