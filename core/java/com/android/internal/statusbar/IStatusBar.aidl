@@ -43,5 +43,5 @@ oneway interface IStatusBar
     void preloadRecentApps();
     void cancelPreloadRecentApps();
     void showScreenPinningRequest();
+    void setAutoRotate(boolean enabled);
 }
-
