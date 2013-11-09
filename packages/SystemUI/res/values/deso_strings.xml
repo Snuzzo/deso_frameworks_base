@@ -29,4 +29,7 @@
     <string name="wifi_address_changed">Wi\u2011Fi SSID changed to <xliff:g id="name">%s</xliff:g></string>
     <string name="wifi_changed_ticker">Wi\u2011Fi SSID: <xliff:g id="name">%s</xliff:g></string>
 
+    <!--ScreenShot Trash-->
+    <string name="screenshot_notification_delete">Delete</string>
+
 </resources>
