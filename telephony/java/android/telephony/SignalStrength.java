@@ -19,6 +19,7 @@ package android.telephony;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.SystemProperties;
 import android.telephony.Rlog;
 
 /**
@@ -489,6 +490,16 @@ public class SignalStrength implements Parcelable {
         return mLteCqi;
     }
 
+    /** @hide */
+    public boolean needsOldRilFeature(String feature) {
+        String[] features = SystemProperties.get("ro.telephony.ril.v3", "").split(",");
+        for (String found: features) {
+            if (found.equals(feature))
+                return true;
+        }
+        return false;
+    }
+
     /**
      * Get signal level as an int from 0..4
      *
@@ -498,12 +509,10 @@ public class SignalStrength implements Parcelable {
         int level = 0;
 
         if (isGsm) {
+            boolean oldRil = needsOldRilFeature("signalstrength");
             level = getLteLevel();
-            if (level == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                level = getTdScdmaLevel();
-                if (level == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                    level = getGsmLevel();
-                }
+            if (level == SIGNAL_STRENGTH_NONE_OR_UNKNOWN || oldRil) {
+                level = getGsmLevel();
             }
         } else {
             int cdmaLevel = getCdmaLevel();
@@ -531,12 +540,9 @@ public class SignalStrength implements Parcelable {
     public int getAsuLevel() {
         int asuLevel = 0;
         if (isGsm) {
-            if (getLteLevel() == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                if (getTdScdmaLevel() == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                    asuLevel = getGsmAsuLevel();
-                } else {
-                    asuLevel = getTdScdmaAsuLevel();
-                }
+            boolean oldRil = needsOldRilFeature("signalstrength");
+            if (getLteLevel() == SIGNAL_STRENGTH_NONE_OR_UNKNOWN || oldRil) {
+                asuLevel = getGsmAsuLevel();
             } else {
                 asuLevel = getLteAsuLevel();
             }
@@ -568,12 +574,9 @@ public class SignalStrength implements Parcelable {
 
         if(isGsm()) {
             dBm = getLteDbm();
-            if (dBm == INVALID) {
-                if (getTdScdmaLevel() == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                    dBm = getGsmDbm();
-                } else {
-                    dBm = getTdScdmaDbm();
-                }
+            boolean oldRil = needsOldRilFeature("signalstrength");
+            if (dBm == INVALID || oldRil) {
+                dBm = getGsmDbm();
             }
         } else {
             int cdmaDbm = getCdmaDbm();
