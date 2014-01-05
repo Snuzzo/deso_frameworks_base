@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
@@ -78,9 +79,16 @@ public class Clock extends TextView implements DemoMode {
     public static final int STYLE_CLOCK_CENTER  = 1;
     public static final int STYLE_CLOCK_LEFT    = 2;
 
+    public static final int FONT_BOLD = 0;
+    public static final int FONT_CONDENSED = 1;
+    public static final int FONT_LIGHT = 2;
+    public static final int FONT_LIGHT_ITALIC = 3;
+    public static final int FONT_NORMAL = 4;
+
     protected int mClockDateDisplay = CLOCK_DATE_DISPLAY_GONE;
     protected int mClockDateStyle = CLOCK_DATE_STYLE_REGULAR;
     protected int mClockStyle = STYLE_CLOCK_RIGHT;
+    protected int mClockFontStyle = FONT_NORMAL;
     protected boolean mShowClock;
     private int mClockAndDateWidth;
 
@@ -103,17 +111,20 @@ public class Clock extends TextView implements DemoMode {
                     .getUriFor(Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_STYLE), false,
-                    this, UserHandle.USER_ALL);
+                    .getUriFor(Settings.System.STATUSBAR_CLOCK_STYLE),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_COLOR), false,
-                    this, UserHandle.USER_ALL);
+                    .getUriFor(Settings.System.STATUSBAR_CLOCK_FONT_STYLE),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_DATE_DISPLAY), false,
-                    this, UserHandle.USER_ALL);
+                    .getUriFor(Settings.System.STATUSBAR_CLOCK_COLOR),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_DATE_STYLE), false,
-                    this, UserHandle.USER_ALL);
+                    .getUriFor(Settings.System.STATUSBAR_CLOCK_DATE_DISPLAY),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.STATUSBAR_CLOCK_DATE_STYLE),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.STATUSBAR_CLOCK_DATE_FORMAT), false,
                     this, UserHandle.USER_ALL);
@@ -320,7 +331,7 @@ public class Clock extends TextView implements DemoMode {
                                           Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                     }
                 }
-         }
+            }
         }
         return formatted;
     }
@@ -349,6 +360,9 @@ public class Clock extends TextView implements DemoMode {
         mClockDateStyle = Settings.System.getIntForUser(resolver,
                 Settings.System.STATUSBAR_CLOCK_DATE_STYLE, CLOCK_DATE_STYLE_REGULAR,
                 UserHandle.USER_CURRENT);
+        mClockFontStyle = Settings.System.getIntForUser(resolver,
+                Settings.System.STATUSBAR_CLOCK_FONT_STYLE, FONT_NORMAL,
+                UserHandle.USER_CURRENT);
 
         int defaultColor = getResources().getColor(R.color.status_bar_clock_color);
         int clockColor = Settings.System.getIntForUser(resolver,
@@ -361,6 +375,7 @@ public class Clock extends TextView implements DemoMode {
 
         if (mAttached) {
             setTextColor(clockColor);
+            getFontStyle(mClockFontStyle);
             updateClockVisibility();
             updateClock();
         }
@@ -368,7 +383,27 @@ public class Clock extends TextView implements DemoMode {
         if (mStatusBar != null) {
             mStatusBar.setClockAndDateStatus(mClockAndDateWidth, mClockStyle, mShowClock);
         }
-
+	}			
+		
+    public void getFontStyle(int font) {
+        switch (font) {
+            case FONT_BOLD:
+                setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
+                break;
+            case FONT_CONDENSED:
+                setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
+                break;
+            case FONT_LIGHT:
+                setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+                break;
+            case FONT_LIGHT_ITALIC:
+                setTypeface(Typeface.create("sans-serif-light", Typeface.ITALIC));
+                break;
+            case FONT_NORMAL:
+            default:
+                setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+                break;
+        }
     }
 
     protected void updateClockVisibility() {
@@ -415,5 +450,4 @@ public class Clock extends TextView implements DemoMode {
             mStatusBar.setClockAndDateStatus(mClockAndDateWidth, mClockStyle, mShowClock);
         }
     }
-
 }
