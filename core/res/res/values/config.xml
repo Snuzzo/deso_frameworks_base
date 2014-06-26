@@ -2075,12 +2075,10 @@
          service state to display signal strength bars -->
     <bool name="config_combined_signal">true</bool>
 
-    <!-- Support for disabling to fetch APN from OMH card
-         for some cdma carriers -->
-    <bool name="config_fetch_apn_from_omh_card">true</bool>
-
-    <!-- Timeout in MS for how long you have to long-press the back key to
-         kill the foreground app. -->
-    <integer name="config_backKillTimeout">2000</integer>
+    <!-- Default value for proximity check on screen wake
+         NOTE ! - Enable for devices that have a fast response proximity sensor (ideally < 300ms)
+    -->
+    <bool name="config_proximityCheckOnWake">false</bool>
+    <integer name="config_proximityCheckTimeout">250</integer>
 
 </resources>
