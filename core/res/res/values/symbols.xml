@@ -2261,6 +2261,4 @@
   <java-symbol type="bool" name="config_LTE_eri_for_network_name" />
   <java-symbol type="bool" name="config_defaultInTouchMode" />
 
-  <!-- From SignalStrength -->
-  <java-symbol type="integer" name="config_LTE_RSRP_threshold_type" />
 </resources>
