@@ -177,8 +177,7 @@ public class Environment {
 
         /** {@hide} */
         public File getSecondaryStorageDirectory() {
-            return (mExternalDirsForApp.length > 1)
-                    ? mExternalDirsForApp[1] : mExternalDirsForApp[0];
+            return mExternalDirsForApp[1];
         }
 
         @Deprecated
