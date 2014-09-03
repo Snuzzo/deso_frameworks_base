@@ -1865,7 +1865,9 @@
     <bool name="config_switch_phone_on_voice_reg_state_change">true</bool>
 
     <bool name="config_sms_force_7bit_encoding">false</bool>
-<<<<<<< HEAD
+    <!-- Configuartion to support 7bit Ascii encoding and decoding
+         for long messages. -->
+    <bool name="config_ascii_7bit_support_for_long_message">false</bool>
 
     <!-- This config is used to check if the carrier requires converting destination
          number before sending out a SMS.
@@ -1882,10 +1884,8 @@
     <string-array translatable="false" name="config_sms_convert_destination_number_support">
         <item>false</item>
     </string-array>
-=======
-    <!-- Configuartion to support 7bit Ascii encoding and decoding
-         for long messages. -->
-    <bool name="config_ascii_7bit_support_for_long_message">false</bool>
 
->>>>>>> 66521d2... Telephony: Add 7bit Ascii support for long messages
+    <!-- Configuration to set delete any partial segments expire age -->
+    <!-- 30 days by default (60 * 60 * 1000) * 24 * 30 , no long so use string-->
+    <string name="config_partial_segment_expire_age">2592000000</string>
 </resources>
