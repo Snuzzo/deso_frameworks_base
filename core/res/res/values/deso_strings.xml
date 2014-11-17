@@ -39,4 +39,7 @@
     <!-- label for current user in phone options dialog -->
     <string name="global_action_current_user">Current</string>
 
+    <!-- Long-press back kill application -->
+    <string name="app_killed_message">Destroyed</string>
+
 </resources>
