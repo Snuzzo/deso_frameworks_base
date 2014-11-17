@@ -1876,6 +1876,7 @@
     <bool name="config_switch_phone_on_voice_reg_state_change">true</bool>
 
     <bool name="config_sms_force_7bit_encoding">false</bool>
+
     <!-- Configuartion to support 7bit Ascii encoding and decoding
          for long messages. -->
     <bool name="config_ascii_7bit_support_for_long_message">false</bool>
@@ -2057,4 +2058,9 @@
     <!-- Support for disabling to fetch APN from OMH card
          for some cdma carriers -->
     <bool name="config_fetch_apn_from_omh_card">true</bool>
+
+    <!-- Timeout in MS for how long you have to long-press the back key to
+         kill the foreground app. -->
+    <integer name="config_backKillTimeout">2000</integer>
+
 </resources>
