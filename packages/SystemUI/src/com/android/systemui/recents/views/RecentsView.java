@@ -31,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import com.android.systemui.recents.Constants;
 import com.android.systemui.recents.RecentsConfiguration;
 import com.android.systemui.recents.misc.SystemServicesProxy;
@@ -151,17 +150,6 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
 
         // Trigger a new layout
         requestLayout();
-    }
-
-    public void dismissAllTasksAnimated() {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            if (child != mSearchBar) {
-                TaskStackView stackView = (TaskStackView) child;
-                //stackView.dismissAllTasks();
-            }
-        }
     }
 
     public void dismissAllTasksAnimated() {
@@ -315,10 +303,10 @@ public class RecentsView extends FrameLayout implements TaskStackView.TaskStackV
                 mConfig.systemInsets.right, taskStackBounds);
 
         if (mClearRecents != null) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)
                     mClearRecents.getLayoutParams();
-
-            params.bottomMargin = mConfig.systemInsets.bottom;
+            params.topMargin = taskStackBounds.top;
+            params.rightMargin = width - taskStackBounds.right;
             mClearRecents.setLayoutParams(params);
         }
 
