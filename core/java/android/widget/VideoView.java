@@ -313,7 +313,6 @@ public class VideoView extends SurfaceView
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;
             mTargetState  = STATE_IDLE;
-            Log.i(TAG, "Playback Stop end");
         }
     }
 
@@ -322,8 +321,6 @@ public class VideoView extends SurfaceView
             // not ready for playback just yet, will try again later
             return;
         }
-
-        Log.i(TAG, "Open Video");
         AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
