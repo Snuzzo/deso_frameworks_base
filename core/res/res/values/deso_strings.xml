@@ -30,4 +30,7 @@
     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permdesc_preventpower">Allows an app to override the power key.</string>
 
+    <!-- label for item that screenshots in phone options dialog -->
+    <string name="global_action_screenshot">Screenshot</string>
+
 </resources>
