@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -183,6 +184,9 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     void updateRecentsTasks(Intent launchIntent) {
         // If AlternateRecentsComponent has preloaded a load plan, then use that to prevent
         // reconstructing the task stack
+        boolean mRecentsSearchbar = Settings.System.getInt(
+                getContentResolver(), Settings.System.RECENTS_SEARCH_BAR, 1) == 1;
+
         RecentsTaskLoader loader = RecentsTaskLoader.getInstance();
         RecentsTaskLoadPlan plan = AlternateRecentsComponent.consumeInstanceLoadPlan();
         if (plan == null) {
@@ -250,7 +254,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
             }
             findViewById(R.id.floating_action_button).setVisibility(View.VISIBLE);
             if (mRecentsView.hasSearchBar()) {
-                mRecentsView.setSearchBarVisibility(View.VISIBLE);
+                mRecentsView.setSearchBarVisibility(mRecentsSearchbar ? View.VISIBLE : View.GONE);
             } else {
                 addSearchBarAppWidgetView();
             }
