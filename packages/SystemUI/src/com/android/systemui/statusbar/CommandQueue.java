@@ -334,4 +334,3 @@ public class CommandQueue extends IStatusBar.Stub {
         }
     }
 }
-
