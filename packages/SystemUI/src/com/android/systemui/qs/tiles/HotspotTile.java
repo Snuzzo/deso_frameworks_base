@@ -17,6 +17,7 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -32,6 +33,9 @@ public class HotspotTile extends QSTile<QSTile.BooleanState> {
             new AnimationIcon(R.drawable.ic_hotspot_enable_animation);
     private final AnimationIcon mDisable =
             new AnimationIcon(R.drawable.ic_hotspot_disable_animation);
+
+    private static final Intent TETHER_SETTINGS = new Intent().setComponent(new ComponentName(
+            "com.android.settings", "com.android.settings.TetherSettings"));
     private final HotspotController mController;
     private final Callback mCallback = new Callback();
     private final UsageTracker mUsageTracker;
@@ -75,15 +79,7 @@ public class HotspotTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     protected void handleLongClick() {
-        if (mState.value) return;  // don't allow usage reset if hotspot is active
-        final String title = mContext.getString(R.string.quick_settings_reset_confirmation_title,
-                mState.label);
-        mUsageTracker.showResetConfirmation(title, new Runnable() {
-            @Override
-            public void run() {
-                refreshState();
-            }
-        });
+        mHost.startSettingsActivity(TETHER_SETTINGS);
     }
 
     @Override
