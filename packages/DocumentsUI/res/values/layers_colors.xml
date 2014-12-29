@@ -18,4 +18,4 @@
     <!-- exposed colors in main activity and font color docGrid-->
     <color name="exposed_activity_background_color">#ffffffff</color>
     <color name="exposed_font_color_doc_grid">#ffffffff</color>
-</resources> 
+</resources>
