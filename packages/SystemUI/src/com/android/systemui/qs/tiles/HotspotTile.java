@@ -83,6 +83,11 @@ public class HotspotTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleLongClick() {
+        mHost.startSettingsActivity(WIRELESS_SETTINGS);
+    }
+
+    @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
         state.visible = mController.isHotspotSupported();
         state.label = mContext.getString(R.string.quick_settings_hotspot_label);
