@@ -58,6 +58,7 @@ public class ScreenOffTile extends QSTile<QSTile.BooleanState> {
     public void handleClick() {
         mHost.collapsePanels();
         mPm.goToSleep(SystemClock.uptimeMillis());
+        qsCollapsePanel();
     }
 
     @Override

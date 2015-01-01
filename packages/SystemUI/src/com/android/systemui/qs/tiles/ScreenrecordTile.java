@@ -65,6 +65,7 @@ public class ScreenrecordTile extends QSTile<QSTile.BooleanState> {
              // Do nothing
         }
         takeScreenRecord();
+        qsCollapsePanel();
     }
 
     @Override

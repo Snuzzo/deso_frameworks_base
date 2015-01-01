@@ -73,6 +73,7 @@ public class BrightnessTile extends QSTile<QSTile.BooleanState> {
         mHost.collapsePanels();
         mContext.startActivityAsUser(new Intent(
             Intent.ACTION_SHOW_BRIGHTNESS_DIALOG), UserHandle.CURRENT_OR_SELF);
+        qsCollapsePanel();
     }
 
     @Override

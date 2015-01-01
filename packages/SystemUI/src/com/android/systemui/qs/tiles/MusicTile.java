@@ -78,8 +78,8 @@ public class MusicTile extends QSTile<QSTile.BooleanState> {
         } else {
             sendMediaButtonClick(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
         }
-
         refreshState();
+        qsCollapsePanel();
     }
 
     @Override

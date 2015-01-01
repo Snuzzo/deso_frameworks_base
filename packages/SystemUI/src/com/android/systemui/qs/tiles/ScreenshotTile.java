@@ -64,6 +64,7 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
              // Do nothing
         }
         takeScreenshot();
+        qsCollapsePanel();
     }
 
     @Override

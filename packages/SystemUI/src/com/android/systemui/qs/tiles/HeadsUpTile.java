@@ -39,6 +39,7 @@ public class HeadsUpTile extends QSTile<QSTile.BooleanState> {
     protected void handleClick() {
         setEnabled();
         refreshState();
+        qsCollapsePanel();
     }
 
     @Override
