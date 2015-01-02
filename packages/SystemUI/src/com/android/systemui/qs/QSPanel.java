@@ -125,6 +125,7 @@ public class QSPanel extends ViewGroup {
             @Override
             public void onClick(View v) {
                 closeDetail();
+                vibrateTile(20);
             }
         });
     }
@@ -342,6 +343,7 @@ public class QSPanel extends ViewGroup {
             public void onToggleStateChanged(boolean state) {
                 if (mDetailRecord == r) {
                     fireToggleStateChanged(state);
+                    vibrateTile(20);
                 }
             }
             @Override
@@ -440,6 +442,7 @@ public class QSPanel extends ViewGroup {
                 @Override
                 public void onClick(View v) {
                     mHost.startSettingsActivity(settingsIntent);
+                    vibrateTile(20);
                 }
             });
 

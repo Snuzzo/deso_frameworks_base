@@ -525,6 +525,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                 mActivityStarter.startActivity(showIntent.getIntent(), true /* dismissShade */);
             }
         }
+        mQSPanel.vibrateTile(20);
     }
 
     private void startSettingsActivity() {
