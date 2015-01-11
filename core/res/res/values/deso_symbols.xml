@@ -62,4 +62,8 @@
   <!-- In WiFi AP notification -->
   <java-symbol type="string" name="notify_turn_wifi_ap_off_title" />
 
+  <!-- First boot install dialog -->
+  <java-symbol type="string" name="android_installing_apk" />
+  <java-symbol type="string" name="android_installing_title" />
+
 </resources>
