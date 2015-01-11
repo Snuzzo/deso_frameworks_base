@@ -2986,12 +2986,6 @@ public final class Settings {
          */
         public static final String STATUS_BAR_BATTERY_STATUS_COLOR = "status_bar_battery_status_color";
 
-        /** Whether to vibrate when quick settings tile is pressed.
-         *
-         * @hide
-         */
-        public static final String QUICK_SETTINGS_TILES_VIBRATE = "quick_settings_vibrate";
-
         /**
          * Battery status text color
          * @hide
@@ -3176,10 +3170,22 @@ public final class Settings {
         public static final String QS_USE_MAIN_TILES = "sysui_qs_main_tiles";
 
         /**
+         * Whether to vibrate when quick settings tile is pressed.
+         * @hide
+         */
+        public static final String QUICK_SETTINGS_TILES_VIBRATE = "quick_settings_vibrate";
+
+        /**
          * Whether to collapse panel when quick settings tile is pressed.
          * @hide
          */
         public static final String QUICK_SETTINGS_COLLAPSE_PANEL = "quick_settings_collapse_panel";
+
+        /**
+         * Whether to show the brightness slider in quick settings panel.
+         * @hide
+         */
+        public static final String QS_SHOW_BRIGHTNESS_SLIDER = "qs_show_brightness_slider";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
