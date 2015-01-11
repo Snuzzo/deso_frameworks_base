@@ -1250,6 +1250,7 @@ public final class Settings {
             MOVED_TO_SECURE.add(Secure.VOLUME_LINK_NOTIFICATION);
             MOVED_TO_SECURE.add(Secure.QS_TILES);
             MOVED_TO_SECURE.add(Secure.QS_USE_MAIN_TILES);
+            MOVED_TO_SECURE.add(Secure.QS_SHOW_BRIGHTNESS_SLIDER);
         }
 
         private static final HashSet<String> MOVED_TO_GLOBAL;
@@ -3346,10 +3347,17 @@ public final class Settings {
         public static final String STATUS_BAR_QUICK_QS_PULLDOWN = "status_bar_quick_qs_pulldown";
 
         /**
-         *  Enable statusbar double tap gesture on to put device to sleep
+         * Enable statusbar double tap gesture on to put device to sleep
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /** 
+         * Whether to show the brightness slider in quick settings panel.
+         * @hide
+         */
+        @Deprecated
+        public static final String QS_SHOW_BRIGHTNESS_SLIDER = "qs_show_brightness_slider";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -5671,6 +5679,11 @@ public final class Settings {
          */
         public static final String DEVELOPMENT_SHORTCUT = "development_shortcut";
 
+        /** 
+         * Whether to show the brightness slider in quick settings panel.
+         * @hide
+         */
+        public static final String QS_SHOW_BRIGHTNESS_SLIDER = "qs_show_brightness_slider";
 
         /**
          * This are the settings to be backed up.
