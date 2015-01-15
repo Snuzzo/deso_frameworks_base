@@ -125,6 +125,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.internal.util.cm.WeatherControllerImpl;
 import com.android.keyguard.KeyguardHostView.OnDismissAction;
 import com.android.keyguard.ViewMediatorCallback;
 import com.android.systemui.BatteryMeterView;
@@ -198,7 +199,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     static final String TAG = "PhoneStatusBar";
     public static final boolean DEBUG = BaseStatusBar.DEBUG;
     public static final boolean SPEW = false;
-    public static final boolean DUMPTRUCK = true; // extra dumpsys info
+    public static final boolean DUMPTRUCK = false; // extra dumpsys info
     public static final boolean DEBUG_GESTURES = false;
     public static final boolean DEBUG_MEDIA = false;
     public static final boolean DEBUG_MEDIA_FAKE_ARTWORK = false;
@@ -1934,7 +1935,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             && mState != StatusBarState.KEYGUARD;
         }
 
-
         if (force || mCarrierLabelVisible != makeVisible) {
             mCarrierLabelVisible = makeVisible;
             if (DEBUG) {
@@ -3310,7 +3310,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }
 
-    Animation.AnimationListener mTickingDoneListener = new Animation.AnimationListener() {;
+    Animation.AnimationListener mTickingDoneListener = new Animation.AnimationListener() {
         public void onAnimationEnd(Animation animation) {
             mTicking = false;
         }
@@ -4121,7 +4121,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }
 
-
     /**
      * @return true if we would like to stay in the shade, false if it should go away entirely
      */
@@ -4588,7 +4587,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mScreenPinningRequest.showPrompt(allowCancel);
     }
 
-
     public boolean hasActiveNotifications() {
         return !mNotificationData.getActiveNotifications().isEmpty();
     }
@@ -4638,7 +4636,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         private final ArrayList<Callback> mCallbacks = new ArrayList<Callback>();
         private final H mHandler = new H();
-
         // Keeps the last reported state by fireNotificationLight.
         private boolean mNotificationLightOn;
 
