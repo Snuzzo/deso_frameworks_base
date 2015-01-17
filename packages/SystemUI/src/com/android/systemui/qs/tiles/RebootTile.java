@@ -42,6 +42,19 @@ public class RebootTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        mHost.collapsePanels();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                PowerManager pm =
+                    (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                pm.reboot(mRebootToRecovery ? "recovery" : "");
+            }
+        }, 500);
+    }
+
+    @Override
     protected void handleLongClick() {
         mHost.collapsePanels();
         Handler handler = new Handler();

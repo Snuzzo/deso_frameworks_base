@@ -83,6 +83,12 @@ public class MusicTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        sendMediaButtonClick(KeyEvent.KEYCODE_MEDIA_NEXT);
+        refreshState();
+    }
+
+    @Override
     public void handleLongClick() {
         sendMediaButtonClick(KeyEvent.KEYCODE_MEDIA_NEXT);
         refreshState();

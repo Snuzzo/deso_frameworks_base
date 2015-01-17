@@ -96,6 +96,11 @@ public class LockscreenToggleTile extends QSTile<QSTile.BooleanState>
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        mHost.startSettingsActivity(LOCK_SCREEN_SETTINGS);
+    }
+
+    @Override
     protected void handleLongClick() {
         mHost.startSettingsActivity(LOCK_SCREEN_SETTINGS);
     }

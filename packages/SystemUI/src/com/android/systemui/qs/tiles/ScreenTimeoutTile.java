@@ -132,6 +132,11 @@ public class ScreenTimeoutTile extends QSTile<ScreenTimeoutTile.TimeoutState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        mHost.startSettingsActivity(SETTINGS_INTENT);
+    }
+
+    @Override
     protected void handleLongClick() {
         mHost.startSettingsActivity(SETTINGS_INTENT);
     }

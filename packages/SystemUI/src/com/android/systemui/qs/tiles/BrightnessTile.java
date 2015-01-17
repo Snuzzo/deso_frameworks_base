@@ -77,6 +77,12 @@ public class BrightnessTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        toggleState();
+        refreshState();
+    }
+
+    @Override
     public void handleLongClick() {
         toggleState();
         refreshState();

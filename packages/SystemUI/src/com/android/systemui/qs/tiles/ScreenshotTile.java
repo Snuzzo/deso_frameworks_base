@@ -68,6 +68,14 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName("com.android.gallery3d",
+            "com.android.gallery3d.app.GalleryActivity");
+        mHost.startSettingsActivity(intent);
+    }
+
+    @Override
     public void handleLongClick() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClassName("com.android.gallery3d",

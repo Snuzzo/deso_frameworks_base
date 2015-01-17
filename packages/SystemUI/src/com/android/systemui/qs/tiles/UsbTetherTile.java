@@ -71,6 +71,11 @@ public class UsbTetherTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        mHost.startSettingsActivity(WIRELESS_SETTINGS);
+    }
+
+    @Override
     protected void handleLongClick() {
         mHost.startSettingsActivity(WIRELESS_SETTINGS);
     }
