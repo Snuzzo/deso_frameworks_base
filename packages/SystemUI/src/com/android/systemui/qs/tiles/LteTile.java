@@ -54,6 +54,11 @@ public class LteTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleSecondaryClick() {
+        mHost.startSettingsActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+    }
+
+    @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
         // Hide the tile if device doesn't support LTE
         // or it supports Dual Sim Dual Active.

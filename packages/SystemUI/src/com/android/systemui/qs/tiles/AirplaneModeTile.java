@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.provider.Settings;
 import android.provider.Settings.Global;
 
 import com.android.systemui.R;
@@ -61,6 +62,11 @@ public class AirplaneModeTile extends QSTile<QSTile.BooleanState> {
         setEnabled(!mState.value);
         mEnable.setAllowAnimation(true);
         mDisable.setAllowAnimation(true);
+    }
+
+    @Override
+    protected void handleSecondaryClick() {
+        mHost.startSettingsActivity(WIRELESS_SETTINGS);
     }
 
     @Override
