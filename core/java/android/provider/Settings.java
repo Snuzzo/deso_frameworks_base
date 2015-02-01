@@ -5792,11 +5792,17 @@ public final class Settings {
          */
         public static final String DEVELOPMENT_SHORTCUT = "development_shortcut";
 
-        /** 
+        /**
          * Whether to show the brightness slider in quick settings panel.
          * @hide
          */
         public static final String QS_SHOW_BRIGHTNESS_SLIDER = "qs_show_brightness_slider";
+
+        /**
+         * Whether to show four tiles per row.
+         * @hide
+         */
+        public static final String QS_USE_FOUR_COLUMNS = "qs_use_four_columns";
 
         /**
          * This are the settings to be backed up.
