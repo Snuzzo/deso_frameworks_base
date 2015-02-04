@@ -140,11 +140,11 @@
     <bool name="config_show4GForLTE">true</bool>
 
     <!-- milliseconds before the heads up notification auto-dismisses. -->
-    <integer name="heads_up_notification_decay">10000</integer>
+    <integer name="heads_up_notification_decay">4000</integer>
 
     <!-- milliseconds after a heads up notification is pushed back
      before the app can interrupt again. -->
-    <integer name="heads_up_default_snooze_length_ms">60000</integer>
+    <integer name="heads_up_default_snooze_length_ms">40000</integer>
 
     <!-- milliseconds before the heads up notification accepts touches. -->
     <integer name="heads_up_sensitivity_delay">700</integer>
@@ -345,5 +345,5 @@
     <bool name="config_enableDataSwitch">false</bool>
     <!-- Enable the default volume dialog -->
     <bool name="enable_volume_ui">true</bool>
-</resources>
 
+</resources>
