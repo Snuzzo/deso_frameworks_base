@@ -3236,6 +3236,12 @@ public final class Settings {
         public static final String HEADS_UP_DISMISS_ON_REMOVE = "heads_up_dismiss_on_remove";
 
         /**
+         * Hide notification 1 second after touching outside
+         * @hide
+         */
+        public static final String HEADS_UP_TOUCH_OUTSIDE = "heads_up_touch_outside";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
