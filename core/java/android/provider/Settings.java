@@ -3415,10 +3415,15 @@ public final class Settings {
 
         /**
          * Boolean value whether to expand the volume panel
-         *
          * @hide
          */
         public static final String VOLUME_PANEL_EXPANDED = "volume_panel_expanded";
+
+        /**
+         * Timeout for volume panel
+         * @hide
+         */
+        public static final String VOLUME_PANEL_TIMEOUT = "volume_panel_timeout";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
