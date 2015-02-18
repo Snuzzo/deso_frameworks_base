@@ -377,7 +377,8 @@ public class PackageHelper {
             checkBoth = false;
         }
 
-        final boolean emulated = Environment.isExternalStorageEmulated();
+        final boolean externalIsEmulated = Environment.isExternalStorageEmulated();
+        final boolean noemulated = Environment.isNoEmulatedStorageExist();
         final StorageManager storage = StorageManager.from(context);
 
         boolean fitsOnInternal = false;
@@ -387,7 +388,7 @@ public class PackageHelper {
         }
 
         boolean fitsOnExternal = false;
-        if (!emulated && (checkBoth || prefer == RECOMMEND_INSTALL_EXTERNAL)) {
+        if (!externalIsEmulated && (checkBoth || prefer == RECOMMEND_INSTALL_EXTERNAL)) {
             final File target = new UserEnvironment(UserHandle.USER_OWNER)
                     .getExternalStorageDirectory();
             // External is only an option when size is known
@@ -410,7 +411,7 @@ public class PackageHelper {
             if (fitsOnInternal) {
                 return PackageHelper.RECOMMEND_INSTALL_INTERNAL;
             }
-        } else if (!emulated && prefer == RECOMMEND_INSTALL_EXTERNAL) {
+        } else if (prefer == RECOMMEND_INSTALL_EXTERNAL) {
             if (fitsOnExternal) {
                 return PackageHelper.RECOMMEND_INSTALL_EXTERNAL;
             }
@@ -419,7 +420,7 @@ public class PackageHelper {
         if (checkBoth) {
             if (fitsOnInternal) {
                 return PackageHelper.RECOMMEND_INSTALL_INTERNAL;
-            } else if (!emulated && fitsOnExternal) {
+            } else if (fitsOnExternal) {
                 return PackageHelper.RECOMMEND_INSTALL_EXTERNAL;
             }
         }
@@ -429,7 +430,7 @@ public class PackageHelper {
          * the media was unavailable. Otherwise, indicate there was insufficient
          * storage space available.
          */
-        if (!emulated && (checkBoth || prefer == RECOMMEND_INSTALL_EXTERNAL)
+        if (!externalIsEmulated && (checkBoth || prefer == RECOMMEND_INSTALL_EXTERNAL)
                 && !Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             return PackageHelper.RECOMMEND_MEDIA_UNAVAILABLE;
         } else if (noemulated && (checkBoth || prefer == RECOMMEND_INSTALL_EXTERNAL)
