@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 The Android Open Source Project
+ * Copyright (C) 2015 The DesolationROM Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 
 package com.android.systemui;
 
+import android.app.Notification;
+import android.app.Notification.Builder;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
+import android.graphics.drawable.Drawable;
+import android.os.SystemProperties;
 import android.util.Log;
 
 /**
@@ -29,12 +33,13 @@ import android.util.Log;
  */
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
+    private static String mFirstBootNotify = SystemProperties.get("firstbootnotify");
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+	ContentResolver res = context.getContentResolver();
         try {
             // Start the load average overlay, if activated
-            ContentResolver res = context.getContentResolver();
             if (Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0) != 0) {
                 Intent loadavg = new Intent(context, com.android.systemui.LoadAverageService.class);
                 context.startService(loadavg);
@@ -42,5 +47,37 @@ public class BootReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e(TAG, "Can't start load average service", e);
         }
+        if (mFirstBootNotify.equals("true")) {
+	    FirstBootNotify(context);
+	} else {
+	    WelcomeBackNotify(context);
+	}
+    }
+    
+    public void FirstBootNotify(Context context) {
+        Notification.Builder mBuilder = new Notification.Builder(context)
+	        .setSmallIcon(R.drawable.first_boot_notify)
+                .setAutoCancel(true)
+                .setContentTitle("Welcome to DesolationROM")
+                .setContentText("")
+		.setStyle(new Notification.InboxStyle()
+		.setBigContentTitle("Welcome to DesolationROM")
+		.addLine("Build status: "+SystemProperties.get("rom.buildtype"))
+		.addLine("Build date: "+SystemProperties.get("ro.build.date"))
+		.addLine("Device: "+SystemProperties.get("ro.product.device")));
+	NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(1, mBuilder.build());
+    }
+	
+    public void WelcomeBackNotify(Context context) {
+        Notification.Builder mBuilder = new Notification.Builder(context)
+	        .setSmallIcon(R.drawable.first_boot_notify)
+                .setAutoCancel(true)
+                .setContentTitle("Welcome back to DesolationROM")
+                .setContentText("Build status: "+SystemProperties.get("rom.buildtype")+SystemProperties.get("ro.product.device")+" build!");
+	NotificationManager mNotificationManager =
+	        (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(1, mBuilder.build());
     }
 }
