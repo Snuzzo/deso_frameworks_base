@@ -3299,7 +3299,6 @@ public final class Settings {
         public static final String QS_TILES = "sysui_qs_tiles";
 
         /**
-         * Deprecated Use {@link android.provider.Settings.Secure.QS_USE_MAIN_TILES}
          * @hide
          */
         @Deprecated
@@ -3363,11 +3362,20 @@ public final class Settings {
          */
         public static final String SCREENSHOT_SOUND = "screenshot_sound";
 
-        /** 
-         * Whether to allow one finger quick settings expansion on the right side of the statusbar
+        /**
+         * Whether to allow one finger quick settings expansion on the right side of the statusbar.
+         * @deprecated Use {@link android.provider.Settings.System#QS_QUICK_PULLDOWN} instead
          * @hide
          */
-        public static final String STATUS_BAR_QUICK_QS_PULLDOWN = "status_bar_quick_qs_pulldown";
+        @Deprecated
+        public static final String STATUS_BAR_QUICK_QS_PULLDOWN = System.QS_QUICK_PULLDOWN;
+
+        /**
+         * Quick Settings Quick Pulldown
+         * 0 = off, 1 = right, 2 = left
+         * @hide
+         */
+        public static final String QS_QUICK_PULLDOWN = "qs_quick_pulldown";
 
         /**
          * Enable statusbar double tap gesture on to put device to sleep
