@@ -65,6 +65,7 @@ import com.android.systemui.qs.tiles.ScreenOffTile;
 import com.android.systemui.qs.tiles.ScreenshotTile;
 import com.android.systemui.qs.tiles.ScreenrecordTile;
 import com.android.systemui.qs.tiles.ScreenTimeoutTile;
+import com.android.systemui.qs.tiles.NavBarTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UsbTetherTile;
 import com.android.systemui.qs.tiles.WifiTile;
@@ -346,6 +347,8 @@ public class QSTileHost implements QSTile.Host {
                 return new UsbTetherTile(this);
             case QSConstants.TILE_AMBIENT_DISPLAY:
                 return new AmbientDisplayTile(this);
+            case QSConstants.TILE_NAVBAR:
+                return new NavBarTile(this);
             default:
                 throw new IllegalArgumentException("Bad tile spec: " + tileSpec);
         }
