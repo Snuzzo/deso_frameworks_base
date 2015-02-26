@@ -65,7 +65,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
         implements NetworkController, DemoMode {
     // debug
     static final String TAG = "StatusBar.NetworkController";
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
     static final boolean CHATTY = false; // additional diagnostics, but not logspew
 
     // telephony
@@ -1400,7 +1400,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
 
         if (!mDataConnected) {
             int inetCondition = inetConditionForNetwork(ConnectivityManager.TYPE_MOBILE);
-            Log.d(TAG, "refreshViews: Data not connected!! Set no data type icon / Roaming");
+            if (DEBUG) Log.d(TAG, "refreshViews: Data not connected!! Set no data type icon / Roaming");
             mDataTypeIconId = 0;
             mQSDataTypeIconId = 0;
             if (isRoaming()) {
