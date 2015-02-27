@@ -1257,10 +1257,6 @@ public class VolumePanel extends Handler implements DemoMode {
         if (!isShowing()) {
             int stream = (streamType == STREAM_REMOTE_MUSIC) ? -1 : streamType;
             // when the stream is for remote playback, use -1 to reset the stream type evaluation
-            mAudioManager.forceVolumeControlStream(stream);
-            if (mDialog != null) {
-                mDialog.show();
-            }
             if (stream != STREAM_MASTER) {
                 mAudioManager.forceVolumeControlStream(stream);
             }
@@ -1300,7 +1296,6 @@ public class VolumePanel extends Handler implements DemoMode {
     }
 
     protected void onPlaySound(int streamType, int flags) {
-
         // If preference is no sound - just exit here
         if (Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.VOLUME_ADJUST_SOUNDS_ENABLED, 1) == 0) {
@@ -1522,13 +1517,11 @@ public class VolumePanel extends Handler implements DemoMode {
 
             case MSG_TIMEOUT: {
                 if (isShowing()) {
-                    if (mDialog != null) {
-                        mDialog.dismiss();
-                        clearRemoteStreamController();
-                        mActiveStreamType = -1;
-                        if (mCallback != null) {
-                            mCallback.onVisible(false);
-                        }
+                    mDialog.dismiss();
+                    clearRemoteStreamController();
+                    mActiveStreamType = -1;
+                    if (mCallback != null) {
+                        mCallback.onVisible(false);
                     }
                 }
                 synchronized (sSafetyWarningLock) {
