@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -592,6 +593,12 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
                             mStack.removeTask(t);
                         }
                     }
+                }
+
+                // And remove all the excluded or all the other tasks
+                SystemServicesProxy ssp = RecentsTaskLoader.getInstance().getSystemServicesProxy();
+                if (size > 0) {
+                    ssp.removeAllUserTask(UserHandle.myUserId());
                 }
             }
         });
