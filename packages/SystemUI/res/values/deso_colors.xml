@@ -34,6 +34,6 @@
     <color name="qs_tile_text_disabled">#ff747474</color>
 
     <!-- QS Customization -->
-    <color name="qs_background_drawable_color">#aa000000</color>
+    <color name="qs_background_drawable_color">#ff263238</color>
 
 </resources>
