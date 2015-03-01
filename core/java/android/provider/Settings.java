@@ -3500,7 +3500,13 @@ public final class Settings {
          * Color of the quick settings text
          * @hide
          */
-        public static final String QS_TEXT_COLOR = "qs_text_color";  
+        public static final String QS_TEXT_COLOR = "qs_text_color";
+
+        /**
+         * Transparent shade
+         * @hide
+         */
+        public static final String QS_TRANSPARENT_SHADE = "qs_transparent_shade";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
