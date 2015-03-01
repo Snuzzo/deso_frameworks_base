@@ -75,13 +75,13 @@ public class BootReceiver extends BroadcastReceiver {
                     .setAutoCancel(true)
                     .setContentTitle("Welcome to DesolationRom")
                     .setContentText("Tap to view changelog.")
+					.setContentIntent(contentIntent)
 					.setStyle(new Notification.InboxStyle()
 					.setBigContentTitle("Welcome to DesolationRom")
 					.addLine("Build status: "+SystemProperties.get("rom.buildtype"))
 					.addLine("Build date: "+SystemProperties.get("ro.build.date"))
 					.addLine("Device: "+SystemProperties.get("ro.product.device"))
-					.addLine("Tap to view changelog.")))
-					.setContentIntent(contentIntent);
+					.addLine("Tap to view changelog."));
 		NotificationManager mNotificationManager =
 			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());
