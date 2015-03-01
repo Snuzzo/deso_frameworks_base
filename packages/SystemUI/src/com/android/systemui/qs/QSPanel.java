@@ -86,6 +86,8 @@ public class QSPanel extends ViewGroup {
     private boolean mUseFourColumns;
     private boolean mVibrationEnabled;
 
+    private boolean mQSShadeTransparency = false;
+
     private Record mDetailRecord;
     private Callback mCallback;
     private BrightnessController mBrightnessController;
@@ -633,9 +635,16 @@ public class QSPanel extends ViewGroup {
     }
 
     public void setDetailBackgroundColor(int color) {
+        mQSShadeTransparency = Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.QS_TRANSPARENT_SHADE, 0) == 1;
         if (mDetail != null) {
-            mDetail.getBackground().setColorFilter(
-                    color, Mode.MULTIPLY);
+            if (mQSShadeTransparency) {
+                mDetail.getBackground().setColorFilter(
+                        color, Mode.MULTIPLY);
+            } else {
+                mDetail.getBackground().setColorFilter(
+                        color, Mode.SRC_OVER);
+            }
         }
     }
 
@@ -722,6 +731,9 @@ public class QSPanel extends ViewGroup {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QUICK_SETTINGS_TILES_VIBRATE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_TRANSPARENT_SHADE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -751,6 +763,9 @@ public class QSPanel extends ViewGroup {
                 0, UserHandle.USER_CURRENT) == 1;
             mVibrationEnabled = Settings.System.getIntForUser(
             mContext.getContentResolver(), Settings.System.QUICK_SETTINGS_TILES_VIBRATE,
+                0, UserHandle.USER_CURRENT) == 1;
+            mQSShadeTransparency = Settings.System.getIntForUser(
+            mContext.getContentResolver(), Settings.System.QS_TRANSPARENT_SHADE,
                 0, UserHandle.USER_CURRENT) == 1;
         }
     }

@@ -3302,6 +3302,12 @@ public final class Settings {
         public static final String QS_TEXT_COLOR = "qs_text_color";
 
         /**
+         * Transparent shade
+         * @hide
+         */
+        public static final String QS_TRANSPARENT_SHADE = "qs_transparent_shade";
+
+        /**
          * Enable/Disable screenshot sound
          * @hide
          */
