@@ -116,7 +116,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private NextAlarmController mNextAlarmController;
     private QSPanel mQSPanel;
 
-
     private final Rect mClipBounds = new Rect();
 
     private boolean mCaptureValues;
@@ -128,12 +127,14 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private float mCurrentT;
     private boolean mShowingDetail;
 
+    private SettingsObserver mSettingsObserver;
+    private boolean mShowBatteryTextExpanded;
+
+    private boolean mQSCSwitch = false;
+
     public StatusBarHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
-    private SettingsObserver mSettingsObserver;
-    private boolean mShowBatteryTextExpanded;
 
     @Override
     protected void onFinishInflate() {
@@ -386,7 +387,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         } else {
             mBatteryController.removeStateChangedCallback(this);
             mNextAlarmController.removeStateChangedCallback(this);
-            mSettingsObserver.observe();
+            mSettingsObserver.unobserve();
         }
     }
 
@@ -679,6 +680,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         float batteryX;
         float batteryY;
         float batteryLevelAlpha;
+        float batteryLevelExpandedAlpha;
         float settingsAlpha;
         float settingsTranslation;
         float signalClusterAlpha;
@@ -705,6 +707,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
             float t3 = Math.max(0, t - 0.7f) / 0.3f;
             batteryLevelAlpha = v1.batteryLevelAlpha * (1 - t3) + v2.batteryLevelAlpha * t3;
+            batteryLevelExpandedAlpha =
+                    v1.batteryLevelExpandedAlpha * (1 - t3) + v2.batteryLevelExpandedAlpha * t3;
             settingsAlpha = v1.settingsAlpha * (1 - t3) + v2.settingsAlpha * t3;
             dateExpandedAlpha = v1.dateExpandedAlpha * (1 - t3) + v2.dateExpandedAlpha * t3;
             dateCollapsedAlpha = v1.dateCollapsedAlpha * (1 - t3) + v2.dateCollapsedAlpha * t3;
@@ -764,6 +768,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
         private void handleShowingDetail(final QSTile.DetailAdapter detail) {
             final boolean showingDetail = detail != null;
+            mQSCSwitch = Settings.System.getInt(getContext().getContentResolver(),
+                    Settings.System.QS_COLOR_SWITCH, 0) == 1;
             transition(mClock, !showingDetail);
             transition(mDateGroup, !showingDetail);
             if (mAlarmShowing) {
@@ -776,7 +782,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                         getContext().getContentResolver(),
                         Settings.System.QS_TEXT_COLOR, 0xffffffff);
                 mQsDetailHeaderTitle.setText(detail.getTitle());
-                mQsDetailHeaderTitle.setTextColor(color);
+                if (mQSCSwitch) {
+                    mQsDetailHeaderTitle.setTextColor(color);
+                }
                 final Boolean toggleState = detail.getToggleState();
                 if (toggleState == null) {
                     mQsDetailHeaderSwitch.setVisibility(INVISIBLE);
@@ -830,6 +838,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_STATUS_PERCENT_STYLE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_COLOR_SWITCH),
+                    false, this, UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -870,5 +881,11 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
         mShowBatteryTextExpanded = showExpandedBatteryPercentage;
         updateBatteryLevelVisibility();
+
+        mQSCSwitch = Settings.System.getInt(
+                resolver, Settings.System.QS_COLOR_SWITCH, 0) == 1;
+
+        updateVisibilities();
+        requestCaptureValues();
     }
 }
