@@ -844,24 +844,18 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             super(handler);
         }
 
-        @Override
         protected void observe() {
-            super.observe();
-
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_STATUS_STYLE),
-                    false, this, UserHandle.USER_ALL);
+                    false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_STATUS_PERCENT_STYLE),
-                    false, this, UserHandle.USER_ALL);
+                    false, this);
             updateSettings();
         }
 
-        @Override
         protected void unobserve() {
-            super.unobserve();
-
             ContentResolver resolver = mContext.getContentResolver();
             resolver.unregisterContentObserver(this);
         }
