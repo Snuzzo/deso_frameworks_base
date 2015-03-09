@@ -1580,37 +1580,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (upgradeVersion == 100) {
             // note: LOCK_SCREEN_SHOW_NOTIFICATIONS now handled in version 106
-            if (mUserHandle == UserHandle.USER_OWNER) {
-                db.beginTransaction();
-                SQLiteStatement stmt = null;
-                try {
-                    stmt = db.compileStatement("INSERT OR REPLACE INTO global(name,value)"
-                            + " VALUES(?,?);");
-                    loadIntegerSetting(stmt, Global.HEADS_UP_NOTIFICATIONS_ENABLED,
-                            R.integer.def_heads_up_enabled);
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                    if (stmt != null) stmt.close();
-                }
-            }
+            upgradeHeadsUpSettingFromNone(db);
             upgradeVersion = 101;
         }
 
         if (upgradeVersion == 101) {
-            if (mUserHandle == UserHandle.USER_OWNER) {
-                db.beginTransaction();
-                SQLiteStatement stmt = null;
-                try {
-                    stmt = db.compileStatement("INSERT OR IGNORE INTO global(name,value)"
-                            + " VALUES(?,?);");
-                    loadSetting(stmt, Settings.Global.DEVICE_NAME, getDefaultDeviceName());
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                    if (stmt != null) stmt.close();
-                }
-            }
+            upgradeDeviceNameFromNone(db);
             upgradeVersion = 102;
         }
 
@@ -2025,6 +2000,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         } else {
             c.close();
+        }
+    }
+
+    private void upgradeHeadsUpSettingFromNone(SQLiteDatabase db) {
+        if (mUserHandle == UserHandle.USER_OWNER) {
+            db.beginTransaction();
+            SQLiteStatement stmt = null;
+            try {
+                stmt = db.compileStatement("INSERT OR REPLACE INTO global(name,value)"
+                        + " VALUES(?,?);");
+                loadIntegerSetting(stmt, Global.HEADS_UP_NOTIFICATIONS_ENABLED,
+                        R.integer.def_heads_up_enabled);
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+                if (stmt != null) stmt.close();
+            }
+        }
+    }
+
+    private void upgradeDeviceNameFromNone(SQLiteDatabase db) {
+        if (mUserHandle == UserHandle.USER_OWNER) {
+            db.beginTransaction();
+            SQLiteStatement stmt = null;
+            try {
+                stmt = db.compileStatement("INSERT OR IGNORE INTO global(name,value)"
+                        + " VALUES(?,?);");
+                loadSetting(stmt, Settings.Global.DEVICE_NAME, getDefaultDeviceName());
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+                if (stmt != null) stmt.close();
+            }
         }
     }
 
