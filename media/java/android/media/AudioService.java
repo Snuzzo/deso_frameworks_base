@@ -3273,6 +3273,9 @@ public class AudioService extends IAudioService.Stub {
         int result = FLAG_ADJUST_VOLUME;
         int ringerMode = getRingerModeInternal();
 
+        if (DEBUG_VOL)
+            Log.d(TAG, "checkForRingerModeChange oldIndex = " + oldIndex + " direction = " + direction + " step = " + step + " mPrevVolDirection = " + mPrevVolDirection);
+
         switch (ringerMode) {
         case RINGER_MODE_NORMAL:
             if (direction == AudioManager.ADJUST_LOWER) {
