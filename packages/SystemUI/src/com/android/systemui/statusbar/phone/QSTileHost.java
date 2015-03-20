@@ -52,6 +52,7 @@ import com.android.systemui.qs.tiles.LocationTile;
 import com.android.systemui.qs.tiles.NfcTile;
 import com.android.systemui.qs.tiles.LockscreenToggleTile;
 import com.android.systemui.qs.tiles.LteTile;
+import com.android.systemui.qs.tiles.MusicTile;
 import com.android.systemui.qs.tiles.NotificationsTile;
 import com.android.systemui.qs.tiles.RebootTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
@@ -331,6 +332,8 @@ public class QSTileHost implements QSTile.Host {
                 return new UsbTetherTile(this);
             case QSConstants.TILE_AMBIENT_DISPLAY:
                 return new AmbientDisplayTile(this);
+            case QSConstants.TILE_MUSIC:
+                return new MusicTile(this);
             default:
                 throw new IllegalArgumentException("Bad tile spec: " + tileSpec);
         }
