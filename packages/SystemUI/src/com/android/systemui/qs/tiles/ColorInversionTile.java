@@ -17,6 +17,7 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.provider.Settings.Secure;
 
 import com.android.systemui.R;
