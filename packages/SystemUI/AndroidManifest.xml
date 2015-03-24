@@ -22,6 +22,7 @@
         android:sharedUserId="android.uid.systemui"
         coreApp="true">
 
+    <uses-permission android:name="android.permission.CLEAR_APP_USER_DATA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -43,6 +44,9 @@
     <uses-permission android:name="android.permission.CONFIGURE_WIFI_DISPLAY" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
+
+    <!-- Screen recording -->
+    <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
 
     <!-- Networking and telephony -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -148,6 +152,12 @@
 
         <receiver android:name=".screenshot.DeleteScreenshot"
                 android:exported="true" />
+
+        <!-- started from PhoneWindowManager
+             TODO: Should have an android:permission attribute -->
+        <service android:name=".omni.screenrecord.TakeScreenrecordService"
+            android:process=":screenrecord"
+            android:exported="false" />
 
         <service android:name=".LoadAverageService"
                 android:exported="true" />
