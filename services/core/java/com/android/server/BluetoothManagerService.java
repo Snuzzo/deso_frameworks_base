@@ -750,11 +750,6 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         }
     }
 
-    public IQBluetooth getQBluetooth() {
-        // sync protection
-        return mQBluetooth;
-    }
-
     private void sendBluetoothStateCallback(boolean isUp) {
         int n = mStateChangeCallbacks.beginBroadcast();
         if (DBG) Log.d(TAG,"Broadcasting onBluetoothStateChange("+isUp+") to " + n + " receivers.");
