@@ -107,8 +107,4 @@ interface IBluetooth
     BluetoothRemoteDiRecord getRemoteDiRecord(in BluetoothDevice device);
     // for dumpsys support
     String dump();
-
-    int setSocketOpt(int type, int port, int optionName, in byte [] optionVal, int optionLen);
-    int getSocketOpt(int type, int port, int optionName, out byte [] optionVal);
-    BluetoothRemoteDiRecord getRemoteDiRecord(in BluetoothDevice device);
 }
