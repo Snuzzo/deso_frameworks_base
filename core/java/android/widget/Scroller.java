@@ -23,7 +23,7 @@ import android.os.PowerManager;
 import android.view.ViewConfiguration;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import org.codeaurora.Performance;
+
 
 /**
  * <p>This class encapsulates scrolling. You can use scrollers ({@link Scroller}
