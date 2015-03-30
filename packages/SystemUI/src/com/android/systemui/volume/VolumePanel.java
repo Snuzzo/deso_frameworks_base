@@ -730,6 +730,10 @@ public class VolumePanel extends Handler implements DemoMode {
         }
     }
 
+    private static boolean isRing(int streamType) {
+        return streamType == AudioManager.STREAM_RING;
+    }
+
     private void createSliders() {
         final Resources res = mContext.getResources();
         final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
@@ -743,6 +747,12 @@ public class VolumePanel extends Handler implements DemoMode {
 
             final int streamType = streamRes.streamType;
             final boolean isNotification = isNotificationOrRing(streamType);
+            boolean enableClick = false;
+            if (mVolumeLinkNotification) {
+                enableClick = isNotification;
+            } else {
+                enableClick = isRing(streamType);
+            }
 
             final StreamControl sc = new StreamControl();
             sc.streamType = streamType;
@@ -756,18 +766,19 @@ public class VolumePanel extends Handler implements DemoMode {
             sc.iconMuteRes = streamRes.iconMuteRes;
             sc.icon.setImageResource(sc.iconRes);
             sc.icon.setClickable(isNotification && mHasVibrator);
-            if (isNotification) {
-                if (mHasVibrator) {
-                    sc.icon.setSoundEffectsEnabled(false);
-                    sc.iconMuteRes = com.android.systemui.R.drawable.ic_ringer_vibrate;
-                    sc.icon.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            resetTimeout();
-                            toggleRinger(sc);
+            sc.icon.setClickable(enableClick);
+            if (enableClick) {
+                sc.icon.setSoundEffectsEnabled(false);
+                sc.icon.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        resetVolPanelTimeout();
+                        toggleRinger(sc);
+                        if (!mVolumeLinkNotification) {
+                            updateStates();
                         }
-                    });
-                }
+                    }
+                });
                 sc.iconSuppressedRes = com.android.systemui.R.drawable.ic_ringer_mute;
             }
             sc.seekbarView = (SeekBar) sc.group.findViewById(com.android.systemui.R.id.seekbar);
