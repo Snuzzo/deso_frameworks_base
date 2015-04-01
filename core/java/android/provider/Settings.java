@@ -2095,20 +2095,6 @@ public final class Settings {
         public static final int SCREEN_BRIGHTNESS_MODE_AUTOMATIC = 1;
 
         /**
-         * Deprecated Use {@link android.provider.Settings.Secure.QS_TILES}
-         * @hide
-         */
-        @Deprecated
-        public static final String QS_TILES = "sysui_qs_tiles";
-
-        /**
-         * Deprecated Use {@link android.provider.Settings.Secure.QS_USE_MAIN_TILES}
-         * @hide
-         */
-        @Deprecated
-        public static final String QS_USE_MAIN_TILES = "sysui_qs_main_tiles";
-
-        /**
          * Control whether the process CPU usage meter should be shown.
          *
          * @deprecated Use {@link Global#SHOW_PROCESSES} instead
