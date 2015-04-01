@@ -28,6 +28,7 @@ import android.app.TaskStackBuilder;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -41,6 +42,7 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -2158,32 +2160,20 @@ public abstract class BaseStatusBar extends SystemUI implements
         boolean accessibilityForcesLaunch = isFullscreen
                 && mAccessibilityManager.isTouchExplorationEnabled();
 
-        final KeyguardTouchDelegate keyguard = KeyguardTouchDelegate.getInstance(mContext);
-        boolean keyguardIsShowing = keyguard.isShowingAndNotOccluded()
-                && keyguard.isInputRestricted();
-
         boolean interrupt = (isFullscreen || (isHighPriority && (isNoisy || hasTicker)))
                 && isAllowed
                 && !isOngoing
                 && !accessibilityForcesLaunch
                 && mPowerManager.isScreenOn()
-                && !keyguardIsShowing
-                && !isImeShowing();;
+                && (!mStatusBarKeyguardViewManager.isShowing()
+                        || mStatusBarKeyguardViewManager.isOccluded())
+                && !mStatusBarKeyguardViewManager.isInputRestricted()
+                && !isImeShowing();
 
         try {
             interrupt = interrupt && !mDreamManager.isDreaming();
         } catch (RemoteException e) {
             Log.d(TAG, "failed to query dream manager", e);
-        }
-
-        // its below our threshold priority, we might want to always display
-        // notifications from certain apps
-        if (!isHighPriority && !isOngoing && !keyguardIsShowing) {
-            // However, we don't want to interrupt if we're in an application that is
-            // in Do Not Disturb
-            if (!isPackageInDnd(getTopLevelPackage())) {
-                return true;
-            }
         }
 
         if (DEBUG) Log.d(TAG, "interrupt: " + interrupt);
@@ -2228,10 +2218,6 @@ public abstract class BaseStatusBar extends SystemUI implements
                 mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         return inputMethodManager != null ? inputMethodManager.isImeShowing() : false;
-    }
-
-    public boolean inKeyguardRestrictedInputMode() {
-        return KeyguardTouchDelegate.getInstance(mContext).isInputRestricted();
     }
 
     public void setInteracting(int barWindow, boolean interacting) {
