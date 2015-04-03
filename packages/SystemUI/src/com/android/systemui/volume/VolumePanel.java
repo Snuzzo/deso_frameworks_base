@@ -819,8 +819,50 @@ public class VolumePanel extends Handler implements DemoMode {
             mSliderPanel.addView(active.group);
             mActiveStreamType = activeStreamType;
             active.group.setVisibility(View.VISIBLE);
+<<<<<<< HEAD
             if (mExtendedPanelExpanded) {
                 expandVolumePanel();
+=======
+            updateSlider(active, true /*forceReloadIcon*/);
+        }
+        updateTimeoutDelay();
+        updateZenPanelVisible();
+        hideVolumePanel();
+    }
+
+    private void showVolumePanel() {
+        mExtendedPanelExpanded = true;
+        for (int i = 0; i < STREAMS.length; i++) {
+            final int streamType = STREAMS[i].streamType;
+            if (isValidExpandedPanelControl(streamType)) {
+                StreamControl control = mStreamControls.get(streamType);
+                if (control != null && control.streamType != mActiveStreamType) {
+                    ViewGroup parent = (ViewGroup) control.group.getParent();
+                    if (parent != null) {
+                        parent.removeView(control.group);
+                    }
+                    mSliderPanel.addView(control.group);
+                    control.group.setVisibility(View.VISIBLE);
+                    control.expandPanel.setVisibility(View.GONE);
+                    updateSlider(control, false);
+                }
+            }
+        }
+        updateZenPanelVisible();
+    }
+
+    private void diappearVolumePanel() {
+        mExtendedPanelExpanded = false;
+        for (int i = 0; i < STREAMS.length; i++) {
+            final int streamType = STREAMS[i].streamType;
+            if (isValidExpandedPanelControl(streamType)) {
+                StreamControl control = mStreamControls.get(streamType);
+                if (control != null && control.streamType != mActiveStreamType) {
+                    control.group.setVisibility(View.GONE);
+                    control.expandPanel.setVisibility(View.GONE);
+                    updateSlider(control, false);
+                }
+>>>>>>> 2da24d0... Framework: Always show ZenPanel when showing expanded volume panel
             }
             updateSlider(active, true /*forceReloadIcon*/);
             updateTimeoutDelay();
@@ -1071,7 +1113,12 @@ public class VolumePanel extends Handler implements DemoMode {
     }
 
     private void updateZenPanelVisible() {
+<<<<<<< HEAD
         setZenPanelVisible(mZenModeAvailable && (isNotificationOrRing(mActiveStreamType) || mExtendedPanelExpanded));
+=======
+        setZenPanelVisible(mZenModeAvailable && 
+            (isNotificationOrRing(mActiveStreamType) || mExtendedPanelExpanded));
+>>>>>>> 2da24d0... Framework: Always show ZenPanel when showing expanded volume panel
     }
 
     public void postVolumeChanged(int streamType, int flags) {
