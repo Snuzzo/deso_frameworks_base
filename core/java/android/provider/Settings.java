@@ -3266,18 +3266,6 @@ public final class Settings {
         public static final String QS_USE_MAIN_TILES = "sysui_qs_main_tiles";
 
         /**
-         * show clear all recents button
-         *  @hide
-         */
-        public static final String SHOW_CLEAR_ALL_RECENTS = "show_clear_all_recents";
-
-        /**
-         * location of the clear all rectents button
-         * @hide
-         */
-        public static final String RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
-
-        /**
          * Network traffic indicator, goes from least to greatest significant bitwise
          * 0 = Display up-stream traffic if set
          * 1 = Display down-stream traffic if set
