@@ -69,4 +69,7 @@
   <!-- Hardware keys -->
   <java-symbol type="integer" name="config_deviceHardwareKeys" />
 
+  <!-- Ambient display-->
+  <java-symbol type="bool" name="config_dozeUseAccelerometer" />
+
 </resources>
