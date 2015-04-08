@@ -2281,4 +2281,7 @@
          config to 7. -->
     <integer name="config_deviceHardwareKeys">79</integer>
 
+    <!-- Doze: force using accelerometer as pick up sensor -->
+    <bool name="config_dozeUseAccelerometer">false</bool>
+
 </resources>
