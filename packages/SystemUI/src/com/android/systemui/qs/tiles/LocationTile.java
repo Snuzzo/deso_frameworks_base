@@ -95,20 +95,20 @@ public class LocationTile extends QSTile<QSTile.BooleanState> {
             showDetail(true);
         } else {
             mController.setLocationEnabled(!mController.isLocationEnabled());
+            mEnable.setAllowAnimation(true);
+            mDisable.setAllowAnimation(true);
             qsCollapsePanel();
         }
-        mEnable.setAllowAnimation(true);
-        mDisable.setAllowAnimation(true);
     }
 
     @Override
     protected void handleSecondaryClick() {
-        mHost.startSettingsActivity(LOCATION_SETTINGS_INTENT);
+        showDetail(true);
     }
 
     @Override
     protected void handleLongClick() {
-        mHost.startSettingsActivity(LOCATION_SETTINGS_INTENT);
+        showDetail(true);
     }
 
     @Override
