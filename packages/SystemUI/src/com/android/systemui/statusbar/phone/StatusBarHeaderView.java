@@ -31,6 +31,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.UserHandle;
+import android.os.Vibrator;
+import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
@@ -138,10 +140,15 @@ public class StatusBarHeaderView extends RelativeLayout
     private boolean mShowWeather;
     private boolean mShowBatteryTextExpanded;
 
+    protected Vibrator mVibrator;
+
     private boolean mQSCSwitch = false;
 
     public StatusBarHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
+
+        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -545,10 +552,17 @@ public class StatusBarHeaderView extends RelativeLayout
         });
     }
 
+    public void vibrate (int duration) {
+        if (mVibrator != null) {
+            if (mVibrator.hasVibrator()) { mVibrator.vibrate(duration); }
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mSettingsButton) {
             startSettingsActivity();
+            vibrate(20);
         } else if (v == mSystemIconsSuperContainer) {
             startBatteryActivity();
         } else if (v == mAlarmStatus && mNextAlarm != null) {
@@ -564,7 +578,10 @@ public class StatusBarHeaderView extends RelativeLayout
 
     @Override
     public boolean onLongClick(View v) {
-        if (v == mWeatherContainer) {
+        if (v == mSettingsButton) {
+            startSettingsLongClickActivity();
+            vibrate(20);
+        } else if (v == mWeatherContainer) {
             startForecastLongClickActivity();
         }
         return false;
