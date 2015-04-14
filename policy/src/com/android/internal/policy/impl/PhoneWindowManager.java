@@ -1262,6 +1262,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
     };
 
+    private final Runnable mEndCallLongPress = new Runnable() {
+        @Override
+        public void run() {
+            mEndCallKeyHandled = true;
+            if (!performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false)) {
+                performAuditoryFeedbackForAccessibilityIfNeed();
+            }
+            showGlobalActionsInternal();
+        }
+    };
+
     private final Runnable mScreenshotRunnable = new Runnable() {
         @Override
         public void run() {

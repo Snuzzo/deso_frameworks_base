@@ -295,9 +295,7 @@ public class StatusBarWindowView extends FrameLayout {
             super(handler);
         }
 
-        @Override
         protected void observe() {
-            super.observe();
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
@@ -305,13 +303,10 @@ public class StatusBarWindowView extends FrameLayout {
             update();
         }
 
-        @Override
         protected void unobserve() {
-            super.unobserve();
             mContext.getContentResolver().unregisterContentObserver(this);
         }
 
-        @Override
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
             mDoubleTapToSleepEnabled = Settings.System.getIntForUser(resolver,

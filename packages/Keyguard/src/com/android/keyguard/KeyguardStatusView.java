@@ -81,7 +81,6 @@ public class KeyguardStatusView extends GridLayout implements
     private boolean mEnableRefresh = false;
 
     private TextView mTemperatureText;
-    private TextView mWeatherCity;
 
     private WeatherController mWeatherController;
 

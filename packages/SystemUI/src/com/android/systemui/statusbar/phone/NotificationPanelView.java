@@ -2096,17 +2096,14 @@ public class NotificationPanelView extends PanelView implements
             update();
         }
 
-        @Override
         protected void unobserve() {
             mContext.getContentResolver().unregisterContentObserver(this);
         }
 
-        @Override
         public void onChange(boolean selfChange) {
             update();
         }
 
-        @Override
         public void onChange(boolean selfChange, Uri uri) {
             update();
             ContentResolver resolver = mContext.getContentResolver();

@@ -335,7 +335,7 @@ public class ImmersiveModeConfirmation {
                      Settings.System.DISABLE_IMMERSIVE_MESSAGE, 0) != 1) {
                 switch(msg.what) {
                     case SHOW:
-                        handleShow((String)msg.obj);
+                        handleShow();
                         break;
                     case HIDE:
                         handleHide();

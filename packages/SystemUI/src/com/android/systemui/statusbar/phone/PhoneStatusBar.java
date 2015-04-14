@@ -60,7 +60,6 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Xfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
@@ -278,6 +277,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     BrightnessMirrorController mBrightnessMirrorController;
     AccessibilityController mAccessibilityController;
     MSimNetworkControllerImpl mMSimNetworkController;
+    WeatherControllerImpl mWeatherController;
 
     int mNaturalBarHeight = -1;
     int mIconSize = -1;
@@ -366,6 +366,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // Status bar carrier
     private boolean mShowStatusBarCarrier;
 
+    private boolean mQSCSwitch;
+
     // position
     int[] mPositionTmp = new int[2];
     boolean mExpandedVisible;
@@ -444,12 +446,29 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.SCREEN_BRIGHTNESS_MODE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.SCREEN_BRIGHTNESS_MODE),
+                    Settings.System.STATUS_BAR_BATTERY_STATUS_TEXT_COLOR),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_NOTIFCATION_DECAY),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_DISMISS_ON_REMOVE),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_TOUCH_OUTSIDE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.BATTERY_SAVER_MODE_COLOR),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_COLOR_SWITCH),
+                    false, this, UserHandle.USER_ALL);
             update();
+        }
+
+        void unobserve() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.unregisterContentObserver(this);
         }
 
         @Override
@@ -460,6 +479,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_STATUS_TEXT_COLOR))) {
+                updateBatteryLevelTextColor();
+            } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.BATTERY_SAVER_MODE_COLOR))) {
                     mBatterySaverWarningColor = Settings.System.getIntForUser(
                             mContext.getContentResolver(),
@@ -469,6 +491,25 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                         mBatterySaverWarningColor = mContext.getResources()
                                 .getColor(com.android.internal.R.color.battery_saver_mode_color);
                     }
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_NOTIFCATION_DECAY))) {
+                    mHeadsUpNotificationDecay = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.HEADS_UP_NOTIFCATION_DECAY,
+                            mContext.getResources().getInteger(
+                            R.integer.heads_up_notification_decay),
+                            UserHandle.USER_CURRENT);
+                    resetHeadsUpDecayTimer();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_COLOR_SWITCH))) {
+                    mQSCSwitch = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.QS_COLOR_SWITCH,
+                            0, UserHandle.USER_CURRENT) == 1;
+                    updateRowStates();
+                    updateSpeedbump();
+                    updateClearAll();
+                    updateEmptyShadeView();
             }
             update();
         }
@@ -480,20 +521,22 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                             Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,
                             UserHandle.USER_CURRENT);
             mAutomaticBrightness = mode != Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
-
             mBrightnessControl = Settings.System.getIntForUser(
                     resolver, Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0,
                     UserHandle.USER_CURRENT) == 1;
-
-            mShowStatusBarCarrier = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_CARRIER, 0, mCurrentUserId) == 1;
-            showStatusBarCarrierLabel(mShowStatusBarCarrier);
 
             mHeadsUpSwype = Settings.System.getInt(
                     resolver, Settings.System.HEADS_UP_DISMISS_ON_REMOVE, 0) == 1;
 
             mHeadsUpTouchOutside = Settings.System.getInt(
                     resolver, Settings.System.HEADS_UP_TOUCH_OUTSIDE, 0) == 1;
+
+            mShowStatusBarCarrier = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_CARRIER, 0, mCurrentUserId) == 1;
+            showStatusBarCarrierLabel(mShowStatusBarCarrier);
+
+            mQSCSwitch = Settings.System.getIntForUser(resolver,
+                    Settings.System.QS_COLOR_SWITCH, 0, mCurrentUserId) == 1;
         }
     }
 
@@ -541,67 +584,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
         }
     };
-
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_BATTERY_STATUS_TEXT_COLOR),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_NOTIFCATION_DECAY),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_DISMISS_ON_REMOVE),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_TOUCH_OUTSIDE),
-                    false, this, UserHandle.USER_ALL);
-            update();
-        }
-
-        void unobserve() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.unregisterContentObserver(this);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            update();
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_BATTERY_STATUS_TEXT_COLOR))) {
-                updateBatteryLevelTextColor();
-           } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_NOTIFCATION_DECAY))) {
-                    mHeadsUpNotificationDecay = Settings.System.getIntForUser(
-                            mContext.getContentResolver(),
-                            Settings.System.HEADS_UP_NOTIFCATION_DECAY,
-                            mContext.getResources().getInteger(
-                            R.integer.heads_up_notification_decay),
-                            UserHandle.USER_CURRENT);
-                    resetHeadsUpDecayTimer();
-            }
-            update();
-        }
-
-        public void update() {
-            ContentResolver resolver = mContext.getContentResolver();
-
-            mHeadsUpSwype = Settings.System.getInt(
-                    resolver, Settings.System.HEADS_UP_DISMISS_ON_REMOVE, 0) == 1;
-
-            mHeadsUpTouchOutside = Settings.System.getInt(
-                    resolver, Settings.System.HEADS_UP_TOUCH_OUTSIDE, 0) == 1;
-        }
-    }
 
     private int mInteractingWindows;
     private boolean mAutohideSuspended;
@@ -1109,7 +1091,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 //});
             }
         } else {
-            mNetworkController = new NetworkControllerImpl(mContext);
+            if (mNetworkController == null) {
+                mNetworkController = new NetworkControllerImpl(mContext);
+            }
             final SignalClusterView signalCluster =
                 (SignalClusterView)mStatusBarView.findViewById(R.id.signal_cluster);
             final SignalClusterView signalClusterKeyguard =
@@ -1155,11 +1139,22 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
 
         mKeyguardBottomArea.setPhoneStatusBar(this);
-        mAccessibilityController = new AccessibilityController(mContext);
+        if (mAccessibilityController == null) {
+            mAccessibilityController = new AccessibilityController(mContext);
+        }
         mKeyguardBottomArea.setAccessibilityController(mAccessibilityController);
-        mNextAlarmController = new NextAlarmController(mContext);
-        mKeyguardMonitor = new KeyguardMonitor();
-        mUserSwitcherController = new UserSwitcherController(mContext, mKeyguardMonitor);
+        if (mNextAlarmController == null) {
+            mNextAlarmController = new NextAlarmController(mContext);
+        }
+        if (mKeyguardMonitor == null) {
+            mKeyguardMonitor = new KeyguardMonitor();
+        }
+        if (mUserSwitcherController == null) {
+            mUserSwitcherController = new UserSwitcherController(mContext, mKeyguardMonitor);
+        }
+        if (mWeatherController == null) {
+            mWeatherController = new WeatherControllerImpl(mContext);
+        }
 
         mKeyguardUserSwitcher = new KeyguardUserSwitcher(mContext,
                 (ViewStub) mStatusBarWindow.findViewById(R.id.keyguard_user_switcher),
@@ -1206,6 +1201,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mBatteryLevel.setBatteryController(mBatteryController);
         mKeyguardStatusBar.setBatteryController(mBatteryController);
         mHeader.setNextAlarmController(mNextAlarmController);
+        mHeader.setWeatherController(mWeatherController);
 
         PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         mBroadcastReceiver.onReceive(mContext,

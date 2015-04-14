@@ -61,8 +61,10 @@ import com.android.systemui.statusbar.policy.UserInfoController;
 /**
  * The view to manage the header area in the expanded status bar.
  */
-public class StatusBarHeaderView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener,
-        NextAlarmController.NextAlarmChangeCallback, WeatherController.Callback {
+public class StatusBarHeaderView extends RelativeLayout
+        implements View.OnClickListener, View.OnLongClickListener,
+        BatteryController.BatteryStateChangeCallback, NextAlarmController.NextAlarmChangeCallback,
+        WeatherController.Callback {
 
     private boolean mExpanded;
     private boolean mListening;
@@ -120,7 +122,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private NextAlarmController mNextAlarmController;
     private WeatherController mWeatherController;
     private QSPanel mQSPanel;
-
 
     private final Rect mClipBounds = new Rect();
 
@@ -432,6 +433,16 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private void updateAmPmTranslation() {
         boolean rtl = getLayoutDirection() == LAYOUT_DIRECTION_RTL;
         mAmPm.setTranslationX((rtl ? 1 : -1) * mTime.getWidth() * (1 - mTime.getScaleX()));
+    }
+
+    @Override
+    public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
+        // could not care less
+    }
+
+    @Override
+    public void onPowerSaveChanged() {
+        // could not care less
     }
 
     @Override
@@ -895,8 +906,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                     Settings.System.STATUS_BAR_BATTERY_STATUS_PERCENT_STYLE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QS_COLOR_SWITCH), false, this,
-                    UserHandle.USER_ALL);
+                    Settings.System.QS_COLOR_SWITCH),
+                    false, this, UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -934,18 +945,17 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                 break;
             default:
                 break;
-
-            mShowBatteryTextExpanded = showExpandedBatteryPercentage;
-            mShowWeather = Settings.System.getInt(
-                    resolver, Settings.System.STATUS_BAR_SHOW_WEATHER, 1) == 1;
-
-            mQSCSwitch = Settings.System.getInt(
-                    resolver, Settings.System.QS_COLOR_SWITCH, 0) == 1;
-
-            updateVisibilities();
-            requestCaptureValues();
         }
         mShowBatteryTextExpanded = showExpandedBatteryPercentage;
         updateBatteryLevelVisibility();
+
+        mShowWeather = Settings.System.getInt(
+                resolver, Settings.System.STATUS_BAR_SHOW_WEATHER, 0) == 1;
+
+        mQSCSwitch = Settings.System.getInt(
+                resolver, Settings.System.QS_COLOR_SWITCH, 0) == 1;
+
+        updateVisibilities();
+        requestCaptureValues();
     }
 }
