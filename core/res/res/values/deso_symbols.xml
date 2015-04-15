@@ -69,7 +69,10 @@
   <!-- Hardware keys -->
   <java-symbol type="integer" name="config_deviceHardwareKeys" />
 
-  <!-- Ambient display-->
+  <!-- Ambient display -->
   <java-symbol type="bool" name="config_dozeUseAccelerometer" />
+
+  <!-- Volume panel expanded -->
+  <java-symbol type="drawable" name="expander_open_mtrl_alpha" />
 
 </resources>
