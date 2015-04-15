@@ -81,4 +81,7 @@
   <java-symbol type="id" name="option4" />
   <java-symbol type="id" name="option5" />
 
+  <!-- Volume panel expand -->
+  <java-symbol type="drawable" name="expander_open_mtrl_alpha" />
+
 </resources>
