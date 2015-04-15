@@ -592,6 +592,13 @@ public class StatusBarHeaderView extends RelativeLayout
                 true /* dismissShade */);
     }
 
+    private void startSettingsLongClickActivity() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+	intent.setClassName("com.android.settings",
+            "com.android.settings.Settings$QSTilesSettingsActivity");
+        mActivityStarter.startActivity(intent, true /* dismissShade */);
+    }
+
     private void startBatteryActivity() {
         mActivityStarter.startActivity(new Intent(Intent.ACTION_POWER_USAGE_SUMMARY),
                 true /* dismissShade */);
