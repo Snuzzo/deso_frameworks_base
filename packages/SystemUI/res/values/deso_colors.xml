@@ -30,4 +30,7 @@
     <!-- QS Customization -->
     <color name="qs_background_drawable_color">#ff263238</color>
 
+    <!-- Quick tile text color when the tile is disabled -->
+    <color name="qs_tile_text_disabled">#ff747474</color>
+
 </resources>
