@@ -66,4 +66,7 @@
   <java-symbol type="string" name="android_installing_apk" />
   <java-symbol type="string" name="android_installing_title" />
 
+  <!-- Hardware keys -->
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
+
 </resources>
