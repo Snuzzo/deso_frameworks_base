@@ -69,5 +69,8 @@
 
     <!-- [CHAR LIMIT=40] Title of dialog that is shown when performing a system install. -->
     <string name="android_installing_title">Android is installing\u2026</string>
+    
+    <!-- USB_PREFERENCES: Notification for when no USB options chosen.  This is the title -->
+    <string name="usb_choose_notification_title">Touch for choose USB options.</string>
 
 </resources>
