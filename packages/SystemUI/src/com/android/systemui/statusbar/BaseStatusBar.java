@@ -28,6 +28,7 @@ import android.app.TaskStackBuilder;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -41,6 +42,7 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -1210,7 +1212,6 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     public abstract void resetHeadsUpDecayTimer();
-    public abstract void hideHeadsUp();
 
     public abstract void scheduleHeadsUpOpen();
 
@@ -2164,6 +2165,11 @@ public abstract class BaseStatusBar extends SystemUI implements
         boolean accessibilityForcesLaunch = isFullscreen
                 && mAccessibilityManager.isTouchExplorationEnabled();
 
+        boolean isExpanded = false;
+            if (mStackScroller != null) {
+                isExpanded = mStackScroller.getIsExpanded();
+        }
+
         boolean interrupt = (isFullscreen || (isHighPriority && (isNoisy || hasTicker))
                 || asHeadsUp == Notification.HEADS_UP_REQUESTED)
                 && isAllowed
@@ -2173,7 +2179,8 @@ public abstract class BaseStatusBar extends SystemUI implements
                         || mStatusBarKeyguardViewManager.isOccluded())
                 && !mStatusBarKeyguardViewManager.isInputRestricted()
                 && !zenBlocksHeadsUp
-                && !isImeShowing();
+                && !isImeShowing()
+                && !isExpanded;
 
         try {
             interrupt = interrupt && !mDreamManager.isDreaming();
@@ -2183,7 +2190,8 @@ public abstract class BaseStatusBar extends SystemUI implements
 
         // its below our threshold priority, we might want to always display
         // notifications from certain apps
-        if (!isHighPriority && !isOngoing) {
+        if (!isHighPriority && !isOngoing && !isExpanded
+                    && !zenBlocksHeadsUp && !isImeShowing()) {
             // However, we don't want to interrupt if we're in an application that is
             // in Do Not Disturb
             if (!isPackageInDnd(getTopLevelPackage())) {
