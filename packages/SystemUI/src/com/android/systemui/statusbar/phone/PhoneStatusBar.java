@@ -1582,12 +1582,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     }
 
     @Override
-    public void hideHeadsUp() {
-        mHandler.removeMessages(MSG_HIDE_HEADS_UP);
-        mHandler.sendEmptyMessage(MSG_HIDE_HEADS_UP);
-    }
-
-    @Override
     public void scheduleHeadsUpOpen() {
         mHandler.sendEmptyMessage(MSG_SHOW_HEADS_UP);
     }
@@ -2299,7 +2293,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if ((diff & StatusBarManager.DISABLE_EXPAND) != 0) {
             if ((state & StatusBarManager.DISABLE_EXPAND) != 0) {
                 animateCollapsePanels();
-                hideHeadsUp();
             }
         }
 

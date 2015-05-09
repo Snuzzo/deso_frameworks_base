@@ -1209,7 +1209,6 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     public abstract void resetHeadsUpDecayTimer();
-    public abstract void hideHeadsUp();
 
     public abstract void scheduleHeadsUpOpen();
 
@@ -2163,6 +2162,11 @@ public abstract class BaseStatusBar extends SystemUI implements
         boolean accessibilityForcesLaunch = isFullscreen
                 && mAccessibilityManager.isTouchExplorationEnabled();
 
+        boolean isExpanded = false;
+            if (mStackScroller != null) {
+                isExpanded = mStackScroller.getIsExpanded();
+        }
+
         boolean interrupt = (isFullscreen || (isHighPriority && (isNoisy || hasTicker))
                 || asHeadsUp == Notification.HEADS_UP_REQUESTED)
                 && isAllowed
@@ -2172,7 +2176,9 @@ public abstract class BaseStatusBar extends SystemUI implements
                         || mStatusBarKeyguardViewManager.isOccluded())
                 && !mStatusBarKeyguardViewManager.isInputRestricted()
                 && !zenBlocksHeadsUp
-                && !isImeShowing();
+                && !isImeShowing()
+                && !isExpanded;
+
         try {
             interrupt = interrupt && !mDreamManager.isDreaming();
         } catch (RemoteException e) {
@@ -2181,7 +2187,8 @@ public abstract class BaseStatusBar extends SystemUI implements
 
         // its below our threshold priority, we might want to always display
         // notifications from certain apps
-        if (!isHighPriority && !isOngoing) {
+        if (!isHighPriority && !isOngoing && !isExpanded
+                    && !zenBlocksHeadsUp && !isImeShowing()) {
             // However, we don't want to interrupt if we're in an application that is
             // in Do Not Disturb
             if (!isPackageInDnd(getTopLevelPackage())) {
