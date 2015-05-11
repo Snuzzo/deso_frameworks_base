@@ -326,7 +326,6 @@ public class CommandQueue extends IStatusBar.Stub {
                 case MSG_TOGGLE_RECENT_APPS:
                     mCallbacks.toggleRecentApps();
                     break;
-        
                 case MSG_PRELOAD_RECENT_APPS:
                     mCallbacks.preloadRecentApps();
                     break;
