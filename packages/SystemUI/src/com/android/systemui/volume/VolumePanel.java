@@ -16,7 +16,6 @@
 
 package com.android.systemui.volume;
 
-import android.animation.LayoutTransition;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -109,7 +108,7 @@ public class VolumePanel extends Handler implements DemoMode {
     private static final int TIMEOUT_DELAY_SAFETY_WARNING = 5000;
     private static final int TIMEOUT_DELAY_EXPANDED = 10000;
     private static final int TIMEOUT_DELAY_VOL_PANEL = 3000;
-    private static final int ANIMATION_DURATION = 300; // ms
+    private static final int ANIMATION_DURATION = 250;
 
     private static final int MSG_VOLUME_CHANGED = 0;
     private static final int MSG_FREE_RESOURCES = 1;
@@ -294,7 +293,6 @@ public class VolumePanel extends Handler implements DemoMode {
                     Settings.System.VOLUME_PANEL_TIMEOUT, TIMEOUT_DELAY_VOL_PANEL);
         }
     };
-
 
     private static class SafetyWarning extends SystemUIDialog
             implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
@@ -1081,10 +1079,9 @@ public class VolumePanel extends Handler implements DemoMode {
     }
 
     private void updateTimeoutDelay() {
-        mTimeoutDelay = mDemoIcon != 0 ? TIMEOUT_DELAY_EXPANDED
-                : sSafetyWarning != null ? TIMEOUT_DELAY_SAFETY_WARNING
-                : mActiveStreamType == AudioManager.STREAM_MUSIC ? TIMEOUT_DELAY_SHORT
+        mTimeoutDelay = sSafetyWarning != null ? TIMEOUT_DELAY_SAFETY_WARNING
                 : mZenPanelExpanded ? TIMEOUT_DELAY_EXPANDED
+                : isZenPanelVisible() ? TIMEOUT_DELAY_COLLAPSED
                 : TIMEOUT_DELAY;
     }
 
@@ -1408,10 +1405,6 @@ public class VolumePanel extends Handler implements DemoMode {
             if (stream != STREAM_MASTER) {
                 mAudioManager.forceVolumeControlStream(stream);
             }
-            if (mCallback != null) {
-                mCallback.onVisible(true);
-            }
-            announceDialogShown();
         }
 
         // Do a little vibrate if applicable (only when going into vibrate mode)
