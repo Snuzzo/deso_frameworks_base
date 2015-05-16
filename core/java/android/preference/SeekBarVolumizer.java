@@ -103,14 +103,8 @@ public class SeekBarVolumizer implements OnSeekBarChangeListener, Handler.Callba
         mDefaultUri = defaultUri;
     }
 
-    private boolean isNotificationOrRing(int stream) {
-        return stream == AudioManager.STREAM_RING
-                || (stream == AudioManager.STREAM_NOTIFICATION && isNotificationStreamLinked());
-    }
-
-    private boolean isNotificationStreamLinked() {
-        return Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.VOLUME_LINK_NOTIFICATION, 1) == 1;
+    private static boolean isNotificationOrRing(int stream) {
+        return stream == AudioManager.STREAM_RING || stream == AudioManager.STREAM_NOTIFICATION;
     }
 
     public void setSeekBar(SeekBar seekBar) {
@@ -132,8 +126,7 @@ public class SeekBarVolumizer implements OnSeekBarChangeListener, Handler.Callba
             mSeekBar.setEnabled(false);
             mSeekBar.setProgress(0);
         } else {
-            mSeekBar.setEnabled(mStreamType != AudioManager.STREAM_NOTIFICATION
-                    || !isNotificationStreamLinked());
+            mSeekBar.setEnabled(true);
             mSeekBar.setProgress(mLastProgress > -1 ? mLastProgress : mOriginalStreamVolume);
         }
     }
