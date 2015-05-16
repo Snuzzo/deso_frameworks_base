@@ -3345,12 +3345,6 @@ public final class Settings {
         public static final String FORCE_EXPANDED_NOTIFICATIONS = "force_expanded_notifications";
 
         /**
-         * Timeout for volume panel
-         * @hide
-         */
-        public static final String VOLUME_PANEL_TIMEOUT = "volume_panel_timeout";
-
-        /**
          * show carrier in statusbar. The value is
          * int (1: Show or 0: Hide).
          */
