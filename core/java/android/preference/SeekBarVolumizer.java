@@ -126,20 +126,16 @@ public class SeekBarVolumizer implements OnSeekBarChangeListener, Handler.Callba
 
     protected void updateSeekBar() {
         if (mNotificationOrRing && mRingerMode == AudioManager.RINGER_MODE_VIBRATE) {
-            mSeekBar.setEnabled(enableSeekBar());
+            mSeekBar.setEnabled(true);
             mSeekBar.setProgress(0);
         } else if (mMuted) {
             mSeekBar.setEnabled(false);
             mSeekBar.setProgress(0);
         } else {
-            mSeekBar.setEnabled(enableSeekBar());
+            mSeekBar.setEnabled(mStreamType != AudioManager.STREAM_NOTIFICATION
+                    || !isNotificationStreamLinked());
             mSeekBar.setProgress(mLastProgress > -1 ? mLastProgress : mOriginalStreamVolume);
         }
-    }
-
-    private boolean enableSeekBar() {
-        return mStreamType != AudioManager.STREAM_NOTIFICATION
-                || !isNotificationStreamLinked();
     }
 
     @Override
@@ -236,7 +232,7 @@ public class SeekBarVolumizer implements OnSeekBarChangeListener, Handler.Callba
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-        if (fromTouch && enableSeekBar()) {
+        if (fromTouch) {
             postSetVolume(progress);
         }
         if (mCallback != null) {
