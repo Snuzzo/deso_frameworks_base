@@ -50,7 +50,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
@@ -627,7 +626,6 @@ public class VolumePanel extends Handler implements DemoMode {
         filter.addAction(AudioManager.RINGER_MODE_CHANGED_ACTION);
         filter.addAction(AudioManager.INTERNAL_RINGER_MODE_CHANGED_ACTION);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
         mContext.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -645,15 +643,6 @@ public class VolumePanel extends Handler implements DemoMode {
 
                 if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                     postDismiss(0);
-                }
-
-                if (TelephonyManager.ACTION_PHONE_STATE_CHANGED.equals(action)) {
-                    if (intent.hasExtra(TelephonyManager.EXTRA_STATE)) {
-                        final String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-                        if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-                            postDismiss(0);
-                        }
-                    }
                 }
             }
         }, filter);
