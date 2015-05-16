@@ -28,7 +28,6 @@
         android:paddingTop="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:orientation="vertical"
         android:clipChildren="false" />
 
     <include
