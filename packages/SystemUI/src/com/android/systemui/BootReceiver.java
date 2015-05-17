@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import android.util.Log;
 import android.widget.Toast;
 import android.widget.TextView;
 
+import java.util.Random;
+
 /**
  * Performs a number of miscellaneous, non-system-critical actions
  * after the system has finished booting.
@@ -48,6 +51,8 @@ import android.widget.TextView;
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
     private static String mFirstBootNotify = SystemProperties.get("firstbootnotify");
+    Random RGBrandom = new Random();
+	int mRandomColor = RGBrandom.nextInt(999999) + 1;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -63,6 +68,8 @@ public class BootReceiver extends BroadcastReceiver {
         }
         if (mFirstBootNotify.equals("true")){
 			FirstBootNotify(context);
+		} else {
+			WelcomeBackNotify(context);
 		}
 	}
     
@@ -73,6 +80,7 @@ public class BootReceiver extends BroadcastReceiver {
 		Notification.Builder mBuilder = new Notification.Builder(context)
 					.setSmallIcon(R.drawable.first_boot_notify)
                     .setAutoCancel(true)
+                    .setColor(mRandomColor)
                     .setContentTitle("Welcome to DesolationRom")
                     .setContentText("Tap to view changelog.")
 					.setContentIntent(contentIntent)
@@ -82,6 +90,18 @@ public class BootReceiver extends BroadcastReceiver {
 					.addLine("Build date: "+SystemProperties.get("ro.build.date"))
 					.addLine("Device: "+SystemProperties.get("ro.product.device"))
 					.addLine("Tap to view changelog."));
+		NotificationManager mNotificationManager =
+			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(1, mBuilder.build());
+	}
+	
+	public void WelcomeBackNotify(Context context) {
+		Notification.Builder mBuilder = new Notification.Builder(context)
+					.setSmallIcon(R.drawable.first_boot_notify)
+                    .setAutoCancel(true)
+                    .setColor(mRandomColor)
+                    .setContentTitle("Welcome back to DesolationRom!")
+                    .setContentText(SystemProperties.get("rom.buildtype")+" build!");
 		NotificationManager mNotificationManager =
 			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());
