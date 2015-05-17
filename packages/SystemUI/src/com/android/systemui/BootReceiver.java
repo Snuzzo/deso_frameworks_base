@@ -51,6 +51,7 @@ import java.util.Random;
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
     private static String mFirstBootNotify = SystemProperties.get("firstbootnotify");
+    private static String WELCOME_BACK_NOTIFY = "welcome_back_notify" ;
     Random RGBrandom = new Random();
 	int mRandomColor = RGBrandom.nextInt(999999) + 1;
 
@@ -69,7 +70,10 @@ public class BootReceiver extends BroadcastReceiver {
         if (mFirstBootNotify.equals("true")){
 			FirstBootNotify(context);
 		} else {
+			ContentResolver res = context.getContentResolver();
+			if (Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 0) != 0) {
 			WelcomeBackNotify(context);
+			}
 		}
 	}
     
