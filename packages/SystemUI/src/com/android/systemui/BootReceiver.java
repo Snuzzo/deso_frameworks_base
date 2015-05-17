@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.SystemProperties;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 
 /**
@@ -33,7 +35,7 @@ import android.util.Log;
  */
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
-    private static String mFirstBootNotify = SystemProperties.get("firstbootnotify");
+    private static String WELCOME_BACK_NOTIFY = "welcome_back_notify" ;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -47,10 +49,13 @@ public class BootReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e(TAG, "Can't start load average service", e);
         }
-        if (mFirstBootNotify.equals("true")) {
+        if (Settings.Secure.getIntForUser(res,
+                Settings.Secure.USER_SETUP_COMPLETE, 0, UserHandle.USER_CURRENT) == 0) {
 	    FirstBootNotify(context);
 	} else {
-	    WelcomeBackNotify(context);
+	    if (Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 0) != 0) {
+	        WelcomeBackNotify(context);
+	    }
 	}
     }
     
@@ -75,7 +80,7 @@ public class BootReceiver extends BroadcastReceiver {
 	        .setSmallIcon(R.drawable.first_boot_notify)
                 .setAutoCancel(true)
                 .setContentTitle("Welcome back to DesolationROM")
-                .setContentText("Build status: "+SystemProperties.get("rom.buildtype")+SystemProperties.get("ro.product.device")+" build!");
+                .setContentText("Build status: "+SystemProperties.get("rom.buildtype")+"."+SystemProperties.get("ro.deso.version")+" build!");
 	NotificationManager mNotificationManager =
 	        (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());
