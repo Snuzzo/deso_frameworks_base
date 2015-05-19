@@ -824,7 +824,7 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
         boolean stackFromBottom = a.getBoolean(R.styleable.AbsListView_stackFromBottom, false);
         setStackFromBottom(stackFromBottom);
 
-        boolean scrollingCacheEnabled = a.getBoolean(R.styleable.AbsListView_scrollingCache, true);
+        boolean scrollingCacheEnabled = false;
         setScrollingCacheEnabled(scrollingCacheEnabled);
 
         boolean useTextFilter = a.getBoolean(R.styleable.AbsListView_textFilterEnabled, false);
@@ -1591,11 +1591,12 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
      * @see #isScrollingCacheEnabled()
      * @see View#setDrawingCacheEnabled(boolean)
      */
+
     public void setScrollingCacheEnabled(boolean enabled) {
         if (mScrollingCacheEnabled && !enabled) {
             clearScrollingCache();
         }
-        mScrollingCacheEnabled = enabled;
+        mScrollingCacheEnabled = enabled; /** Stock is enabled Snuzzo@GitHub Set this as disabled as a fallback */ 
     }
 
     /**
