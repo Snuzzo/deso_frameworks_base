@@ -139,7 +139,7 @@ final class ProcessList {
     static final int MAX_CACHED_APPS = SystemProperties.getInt("ro.sys.fw.bg_apps_limit",32);
     static final boolean USE_TRIM_SETTINGS =
             SystemProperties.getBoolean("ro.sys.fw.use_trim_settings",true);
-    static final int EMPTY_APP_PERCENT = SystemProperties.getInt("ro.sys.fw.empty_app_percent",50);
+    static final int EMPTY_APP_PERCENT = SystemProperties.getInt("ro.sys.fw.empty_app_percent",35);
     static final int TRIM_EMPTY_PERCENT =
             SystemProperties.getInt("ro.sys.fw.trim_empty_percent",100);
     static final int TRIM_CACHE_PERCENT =
@@ -148,8 +148,8 @@ final class ProcessList {
             SystemProperties.getLong("ro.sys.fw.trim_enable_memory",1073741824);
     public static boolean allowTrim() { return Process.getTotalMemory() < TRIM_ENABLE_MEMORY ; }
 
-    // We allow empty processes to stick around for at most 30 minutes.
-    static final long MAX_EMPTY_TIME = 30*60*1000;
+    // We allow empty processes to stick around for at most 15 minutes.
+    static final long MAX_EMPTY_TIME = 15*60*1000;
 
     // The maximum number of empty app processes we will let sit around.
     private static final int MAX_EMPTY_APPS = computeEmptyProcessLimit(MAX_CACHED_APPS);
@@ -207,20 +207,20 @@ final class ProcessList {
     };
     // These are the high-end OOM level limits for 32bit
     private final int[] mOomMinFreeHigh32Bit = new int[] {
-            61440, 76800, 92160,
-            107520, 137660, 174948
+            41165, 51456, 61440,
+            76800, 92160, 107520
     };
     // These are the low-end OOM level limits.  This is appropriate for an
     // HVGA or smaller phone with less than 512MB.  Values are in KB.
     private final int[] mOomMinFreeLow = new int[] {
-            12288, 18432, 24576,
-            36864, 43008, 49152
+            8192, 12288, 16384,
+            24576, 28672, 32768
     };
     // These are the high-end OOM level limits.  This is appropriate for a
     // 1280x800 or larger screen with around 1GB RAM.  Values are in KB.
     private final int[] mOomMinFreeHigh = new int[] {
-            73728, 92160, 110592,
-            129024, 147456, 184320
+            41165, 51456, 61440,
+            76800, 92160, 107520
     };
     // The actual OOM killer memory levels we are using.
     private final int[] mOomMinFree = new int[mOomAdj.length];
@@ -336,13 +336,13 @@ final class ProcessList {
         }
 
         // The maximum size we will restore a process from cached to background, when under
-        // memory duress, is 1/3 the size we have reserved for kernel caches and other overhead
+        // memory duress, is 1/2 the size we have reserved for kernel caches and other overhead
         // before killing background processes.
-        mCachedRestoreLevel = (getMemLevel(ProcessList.CACHED_APP_MAX_ADJ)/1024) / 3;
+        mCachedRestoreLevel = (getMemLevel(ProcessList.CACHED_APP_MAX_ADJ)/1024) / 2;
 
-        // Ask the kernel to try to keep enough memory free to allocate 3 full
+        // Ask the kernel to try to keep enough memory free to allocate 2 full
         // screen 32bpp buffers without entering direct reclaim.
-        int reserve = displayWidth * displayHeight * 4 * 3 / 1024;
+        int reserve = displayWidth * displayHeight * 4 * 2 / 1024;
         int reserve_adj = Resources.getSystem().getInteger(com.android.internal.R.integer.config_extraFreeKbytesAdjust);
         int reserve_abs = Resources.getSystem().getInteger(com.android.internal.R.integer.config_extraFreeKbytesAbsolute);
 
@@ -487,52 +487,52 @@ final class ProcessList {
     }
 
     // How long after a state change that it is safe to collect PSS without it being dirty.
-    public static final int PSS_SAFE_TIME_FROM_STATE_CHANGE = 1000;
+    public static final int PSS_SAFE_TIME_FROM_STATE_CHANGE = 750;
 
     // The minimum time interval after a state change it is safe to collect PSS.
-    public static final int PSS_MIN_TIME_FROM_STATE_CHANGE = 15*1000;
+    public static final int PSS_MIN_TIME_FROM_STATE_CHANGE = 15*750;
 
     // The maximum amount of time we want to go between PSS collections.
-    public static final int PSS_MAX_INTERVAL = 30*60*1000;
+    public static final int PSS_MAX_INTERVAL = 30*60*750;
 
     // The minimum amount of time between successive PSS requests for *all* processes.
-    public static final int PSS_ALL_INTERVAL = 10*60*1000;
+    public static final int PSS_ALL_INTERVAL = 10*60*750;
 
     // The minimum amount of time between successive PSS requests for a process.
-    private static final int PSS_SHORT_INTERVAL = 2*60*1000;
+    private static final int PSS_SHORT_INTERVAL = 2*60*750;
 
     // The amount of time until PSS when a process first becomes top.
-    private static final int PSS_FIRST_TOP_INTERVAL = 10*1000;
+    private static final int PSS_FIRST_TOP_INTERVAL = 10*750;
 
     // The amount of time until PSS when a process first goes into the background.
-    private static final int PSS_FIRST_BACKGROUND_INTERVAL = 20*1000;
+    private static final int PSS_FIRST_BACKGROUND_INTERVAL = 20*750;
 
     // The amount of time until PSS when a process first becomes cached.
-    private static final int PSS_FIRST_CACHED_INTERVAL = 30*1000;
+    private static final int PSS_FIRST_CACHED_INTERVAL = 30*750;
 
     // The amount of time until PSS when an important process stays in the same state.
-    private static final int PSS_SAME_IMPORTANT_INTERVAL = 15*60*1000;
+    private static final int PSS_SAME_IMPORTANT_INTERVAL = 15*60*750;
 
     // The amount of time until PSS when a service process stays in the same state.
-    private static final int PSS_SAME_SERVICE_INTERVAL = 20*60*1000;
+    private static final int PSS_SAME_SERVICE_INTERVAL = 20*60*750;
 
     // The amount of time until PSS when a cached process stays in the same state.
-    private static final int PSS_SAME_CACHED_INTERVAL = 30*60*1000;
+    private static final int PSS_SAME_CACHED_INTERVAL = 30*60*750;
 
     // The minimum time interval after a state change it is safe to collect PSS.
-    public static final int PSS_TEST_MIN_TIME_FROM_STATE_CHANGE = 10*1000;
+    public static final int PSS_TEST_MIN_TIME_FROM_STATE_CHANGE = 10*750;
 
     // The amount of time during testing until PSS when a process first becomes top.
-    private static final int PSS_TEST_FIRST_TOP_INTERVAL = 3*1000;
+    private static final int PSS_TEST_FIRST_TOP_INTERVAL = 3*750;
 
     // The amount of time during testing until PSS when a process first goes into the background.
-    private static final int PSS_TEST_FIRST_BACKGROUND_INTERVAL = 5*1000;
+    private static final int PSS_TEST_FIRST_BACKGROUND_INTERVAL = 5*750;
 
     // The amount of time during testing until PSS when an important process stays in same state.
-    private static final int PSS_TEST_SAME_IMPORTANT_INTERVAL = 10*1000;
+    private static final int PSS_TEST_SAME_IMPORTANT_INTERVAL = 10*750;
 
     // The amount of time during testing until PSS when a background process stays in same state.
-    private static final int PSS_TEST_SAME_BACKGROUND_INTERVAL = 15*1000;
+    private static final int PSS_TEST_SAME_BACKGROUND_INTERVAL = 15*750;
 
     public static final int PROC_MEM_PERSISTENT = 0;
     public static final int PROC_MEM_TOP = 1;
