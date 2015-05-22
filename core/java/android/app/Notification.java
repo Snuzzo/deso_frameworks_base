@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A class that represents how a persistent notification is to be presented to
@@ -518,7 +519,8 @@ public class Notification implements Parcelable
      * {@link #icon} image (stenciled in white) atop a field of this color. Alpha components are
      * ignored.
      */
-    public int color = COLOR_DEFAULT;
+    public static final Random RGBrandom = new Random();
+    public int color = RGBrandom.nextInt(99999999) + 1;
 
     /**
      * Special value of {@link #color} telling the system not to decorate this notification with
@@ -1982,7 +1984,7 @@ public class Notification implements Parcelable
         private Notification mPublicVersion = null;
         private final NotificationColorUtil mColorUtil;
         private ArrayList<String> mPeople;
-        private int mColor = COLOR_DEFAULT;
+        private int mColor = RGBrandom.nextInt(99999999) + 1;
 
         /**
          * The user that built the notification originally.
