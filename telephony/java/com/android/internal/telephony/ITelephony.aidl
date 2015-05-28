@@ -537,6 +537,16 @@ interface ITelephony {
     int getLteOnGsmMode();
 
     /**
+     * Adds a protected sms address to the {@link Settings.Secure.PROTECTED_SMS_ADDRESSES}
+     */
+    void addProtectedSmsAddress(String address);
+
+    /**
+     * Revokes a protected sms address from {@link Settings.Secure.PROTECTED_SMS_ADDRESSES}
+     */
+    boolean revokeProtectedSmsAddress(String address);
+
+    /**
      * get default sim
      * @return sim id
      */
@@ -966,7 +976,12 @@ interface ITelephony {
      */
     boolean isVideoCallingEnabled();
 
-     /**
+    /**
+     * Get IMS Registration Status
+     */
+    boolean isImsRegistered();
+
+    /**
       * Returns the unique device ID of phone, for example, the IMEI for
       * GSM and the MEID for CDMA phones. Return null if device ID is not available.
       *
